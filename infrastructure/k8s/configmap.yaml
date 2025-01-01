@@ -1,0 +1,53 @@
+# kubernetes v1.24+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: baby-cry-analyzer-config
+  namespace: baby-cry-analyzer
+  labels:
+    app: baby-cry-analyzer
+    environment: ${ENV}
+    version: 1.0.0
+    managed-by: terraform
+
+data:
+  # Application Configuration
+  APP_NAME: "Baby Cry Analyzer"
+  NODE_ENV: "${ENV}"
+  API_VERSION: "v1"
+  PORT: "3000"
+  ML_SERVICE_PORT: "5000"
+  CORS_ORIGIN: "*"
+
+  # Monitoring Configuration
+  LOG_LEVEL: "info"
+  METRICS_PATH: "/metrics"
+  HEALTH_CHECK_PATH: "/health"
+  MONITORING_ENABLED: "true"
+  TRACING_ENABLED: "true"
+  METRICS_INTERVAL: "15"
+  HEALTH_CHECK_INTERVAL: "30"
+
+  # Audio Processing Configuration
+  AUDIO_SAMPLE_RATE: "44100"
+  AUDIO_CHANNELS: "1"
+  AUDIO_FORMAT: "wav"
+  MAX_RECORDING_DURATION: "300"
+
+  # ML Service Configuration
+  MIN_CONFIDENCE_SCORE: "0.90"
+  PATTERN_LEARNING_INTERVAL: "86400"
+  ML_MODEL_UPDATE_INTERVAL: "604800"
+  ALERT_THRESHOLD: "0.95"
+
+  # Performance Configuration
+  CACHE_TTL: "3600"
+  RATE_LIMIT_WINDOW: "900"
+  RATE_LIMIT_MAX_REQUESTS: "100"
+  BACKGROUND_PROCESSING_BATCH_SIZE: "50"
+  MAX_CONCURRENT_ANALYSIS: "100"
+  ERROR_RETRY_ATTEMPTS: "3"
+  ERROR_RETRY_DELAY: "1000"
+
+  # Data Management Configuration
+  DATA_RETENTION_DAYS: "90"
