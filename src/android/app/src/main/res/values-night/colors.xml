@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    Dark theme color resources optimized for:
+    - Material Design 3.0 dark theme guidelines
+    - OLED display power efficiency
+    - Reduced blue light emission
+    - Enhanced contrast ratios (WCAG 2.1 AA+)
+    - Cultural color significance preservation
+-->
+<resources>
+    <!-- Primary theme colors -->
+    <color name="colorPrimary">#1976D2</color>
+    <color name="colorPrimaryDark">#0D47A1</color>
+    <color name="colorAccent">#FF80AB</color>
+
+    <!-- Background and surface colors optimized for OLED -->
+    <color name="colorBackground">#121212</color>
+    <color name="colorSurface">#1E1E1E</color>
+
+    <!-- Status colors with enhanced contrast -->
+    <color name="colorError">#CF6679</color>
+    <color name="colorSuccess">#81C784</color>
+    <color name="colorWarning">#FFD54F</color>
+
+    <!-- Text colors with optimal readability -->
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#B0B0B0</color>
+
+    <!-- UI element colors -->
+    <color name="dividerColor">#2D2D2D</color>
+
+    <!-- Audio visualization colors -->
+    <color name="waveformColor">#64B5F6</color>
+    <color name="waveformBackgroundColor">#0D2C4D</color>
+
+    <!-- Monitoring status colors -->
+    <color name="monitorActiveColor">#81C784</color>
+    <color name="monitorInactiveColor">#616161</color>
+
+    <!-- Confidence level indicators -->
+    <color name="confidenceHighColor">#81C784</color>
+    <color name="confidenceMediumColor">#FFD54F</color>
+    <color name="confidenceLowColor">#E57373</color>
+</resources>
