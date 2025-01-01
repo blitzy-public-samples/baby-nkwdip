@@ -1,0 +1,58 @@
+PODS:
+  - AudioKit (5.5.8):
+    - AudioKit/Core (= 5.5.8)
+  - AudioKit/Core (5.5.8)
+  - Firebase/Core (10.12.0):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (~> 10.12.0)
+  - Firebase/CoreOnly (10.12.0)
+  - Firebase/Messaging (10.12.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 10.12.0)
+  - KeychainAccess (4.2.2)
+  - React-Core (0.71.0):
+    - React-Core/Default (= 0.71.0)
+    - React-cxxreact (= 0.71.0)
+    - React-jsi (= 0.71.0)
+    - React-jsiexecutor (= 0.71.0)
+    - React-perflogger (= 0.71.0)
+    - Yoga
+  - React-Core/Default (0.71.0):
+    - React-cxxreact (= 0.71.0)
+    - React-jsi (= 0.71.0)
+    - React-jsiexecutor (= 0.71.0)
+    - React-perflogger (= 0.71.0)
+    - Yoga
+  - SwiftLint (0.51.0)
+  - TensorFlowLiteSwift (2.12.0):
+    - TensorFlowLiteC (= 2.12.0)
+
+DEPENDENCIES:
+  - AudioKit (~> 5.5.8)
+  - Firebase/Core (~> 10.12.0)
+  - Firebase/Messaging (~> 10.12.0)
+  - KeychainAccess (~> 4.2.2)
+  - React-Core (= 0.71.0)
+  - SwiftLint (~> 0.51.0)
+  - TensorFlowLiteSwift (~> 2.12.0)
+
+SPEC REPOS:
+  trunk:
+    - AudioKit
+    - Firebase
+    - KeychainAccess
+    - React-Core
+    - SwiftLint
+    - TensorFlowLiteSwift
+
+SPEC CHECKSUMS:
+  AudioKit: 8a7fd7c9c9b6c45e2e7b0b33c8a9a10d6e72bed1
+  Firebase: 07150e75d142fb9399f6777fa56a187b17f833a0
+  KeychainAccess: c0c4f7f38f6fc7bbe58f5702e25f7bd2f65abf51
+  React-Core: 3c273536859b378b34192cd472e4dd8680fb3c5d
+  SwiftLint: 1b7561918a19e23bfed960e40759086e70f4dba5
+  TensorFlowLiteSwift: 2e8a7e11d0ae7f2c70c5e5a3e84e9a7e6fc077c8
+
+PODFILE CHECKSUM: 7d3b7c8e18f8fed20b7a7e5d96bb7b58624fc1f1
+
+COCOAPODS: 1.12.1
