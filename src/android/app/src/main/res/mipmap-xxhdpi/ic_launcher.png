@@ -1,0 +1,20 @@
+[Binary PNG file with the following specifications]
+
+Format: PNG (Portable Network Graphics)
+Dimensions: 144x144 pixels
+Color Depth: 32-bit RGBA
+Color Space: sRGB
+Density: xxhdpi (144dpi)
+Compression: Lossless PNG compression
+Transparency: Enabled
+
+The image should be generated following Material Design 3.0 guidelines with:
+- 1:1 aspect ratio
+- Minimum 1dp padding safe zone
+- Adaptive icon compatibility
+- Light/dark theme support
+- Proper visual hierarchy and weight
+- Clean edges and crisp rendering
+- Transparent background support
+
+The icon combines the background layer (ic_launcher_background) and foreground layer (ic_launcher_foreground) into a flattened PNG for devices that don't support adaptive icons.
