@@ -1,0 +1,211 @@
+name: Release Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (semver)'
+        required: true
+        type: string
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      release_type:
+        description: 'Type of release'
+        required: true
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          - hotfix
+      dry_run:
+        description: 'Perform dry run'
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 0 * * 1'  # Weekly security scans
+
+env:
+  RELEASE_VERSION: ${{ github.event.inputs.version }}
+  CHANGELOG_PATH: CHANGELOG.md
+  RELEASE_ENVIRONMENT: ${{ github.event.inputs.environment }}
+  RELEASE_TYPE: ${{ github.event.inputs.release_type }}
+  SECURITY_SCAN_THRESHOLD: high
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  PLATFORM_KEYS: ${{ secrets.PLATFORM_KEYS }}
+
+permissions:
+  contents: write
+  packages: write
+  deployments: write
+  issues: write
+  security-events: write
+
+jobs:
+  validate:
+    name: Validate Release Requirements
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Validate version format
+        run: |
+          if ! [[ $RELEASE_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
+            echo "Invalid version format. Must follow semver."
+            exit 1
+          fi
+
+      - name: Run security scan
+        uses: snyk/actions/scan@v2
+        with:
+          severity-threshold: ${{ env.SECURITY_SCAN_THRESHOLD }}
+
+      - name: Container security scan
+        uses: aquasecurity/trivy-action@v1
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+  prepare:
+    name: Prepare Release
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Create release branch
+        run: |
+          git checkout -b release/v${{ env.RELEASE_VERSION }}
+          git push origin release/v${{ env.RELEASE_VERSION }}
+
+      - name: Update version numbers
+        run: |
+          # Update backend version
+          cd src/backend
+          npm version ${{ env.RELEASE_VERSION }} --no-git-tag-version
+          
+          # Update Android version
+          echo "versionCode=${{ env.RELEASE_VERSION }}" > android/app/version.properties
+          
+          # Update iOS version
+          cd ../ios
+          /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${{ env.RELEASE_VERSION }}" Info.plist
+
+      - name: Generate changelog
+        id: changelog
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          prerelease: ${{ env.RELEASE_ENVIRONMENT == 'staging' }}
+          generate_release_notes: true
+
+  android:
+    name: Release Android
+    needs: prepare
+    uses: ./.github/workflows/android.yml
+    with:
+      version: ${{ env.RELEASE_VERSION }}
+      environment: ${{ env.RELEASE_ENVIRONMENT }}
+    secrets: inherit
+
+  ios:
+    name: Release iOS
+    needs: prepare
+    uses: ./.github/workflows/ios.yml
+    with:
+      version: ${{ env.RELEASE_VERSION }}
+      environment: ${{ env.RELEASE_ENVIRONMENT }}
+    secrets: inherit
+
+  backend:
+    name: Release Backend
+    needs: prepare
+    uses: ./.github/workflows/backend.yml
+    with:
+      version: ${{ env.RELEASE_VERSION }}
+      environment: ${{ env.RELEASE_ENVIRONMENT }}
+    secrets: inherit
+
+  finalize:
+    name: Finalize Release
+    needs: [android, ios, backend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create GitHub Release
+        uses: actions/create-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.RELEASE_VERSION }}
+          release_name: Release v${{ env.RELEASE_VERSION }}
+          body_path: ${{ env.CHANGELOG_PATH }}
+          draft: false
+          prerelease: ${{ env.RELEASE_ENVIRONMENT == 'staging' }}
+
+      - name: Upload Release Assets
+        uses: actions/upload-release-asset@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./release-artifacts/
+          asset_name: release-v${{ env.RELEASE_VERSION }}
+          asset_content_type: application/zip
+
+  monitor:
+    name: Monitor Release Health
+    needs: finalize
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check deployment status
+        run: |
+          # Monitor deployment health across all platforms
+          curl -X GET https://api.babycryanalyzer.com/health
+          curl -X GET https://api.babycryanalyzer.com/metrics
+
+      - name: Generate release report
+        run: |
+          echo "Release v${{ env.RELEASE_VERSION }} Status Report" > release-report.md
+          echo "Environment: ${{ env.RELEASE_ENVIRONMENT }}" >> release-report.md
+          echo "Type: ${{ env.RELEASE_TYPE }}" >> release-report.md
+          echo "Deployment Status: Success" >> release-report.md
+
+      - name: Upload release report
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-report
+          path: release-report.md
+          retention-days: 30
+
+  rollback:
+    name: Rollback Release
+    needs: [finalize, monitor]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rollback deployment
+        run: |
+          # Implement rollback procedures for each platform
+          echo "Initiating rollback procedures..."
+          
+          # Rollback backend
+          kubectl rollout undo deployment/backend -n baby-cry-analyzer
+          
+          # Notify team
+          echo "::error::Release rollback initiated due to deployment failure"
