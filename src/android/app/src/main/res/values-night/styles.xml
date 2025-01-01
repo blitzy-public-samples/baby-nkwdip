@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    Dark theme styles implementing:
+    - Material Design 3.0 dark theme guidelines
+    - OLED display optimizations
+    - WCAG 2.1 AA accessibility compliance
+    - Enhanced visual hierarchy for critical elements
+    - Optimized touch targets (44x44dp minimum)
+-->
+<resources>
+    <!-- Base application theme -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- System bars configuration -->
+        <item name="android:statusBarColor">@color/colorBackground</item>
+        <item name="android:navigationBarColor">@color/colorBackground</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+
+        <!-- Color theming -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="colorError">@color/colorError</item>
+
+        <!-- Text colors -->
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+    </style>
+
+    <!-- Launcher theme -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="android:statusBarColor">@color/colorBackground</item>
+        <item name="android:navigationBarColor">@color/colorBackground</item>
+    </style>
+
+    <!-- Custom widget styles -->
+    <style name="Widget.App.WaveformView" parent="Widget.App.Base">
+        <item name="android:background">@color/waveformBackgroundColor</item>
+        <item name="android:foreground">@color/waveformColor</item>
+        <item name="android:minHeight">120dp</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="Widget.App.MonitoringCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/colorSurface</item>
+        <item name="cardElevation">4dp</item>
+        <item name="contentPadding">16dp</item>
+        <item name="android:minHeight">96dp</item>
+    </style>
+
+    <style name="Widget.App.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:minWidth">88dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="Widget.App.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:minWidth">88dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="strokeColor">@color/colorPrimary</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="Widget.App.ConfidenceIndicator" parent="Widget.App.Base">
+        <item name="android:minHeight">8dp</item>
+        <item name="android:background">@color/confidenceIndicatorColor</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <!-- Typography styles -->
+    <style name="TextAppearance.App.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <style name="TextAppearance.App.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="TextAppearance.App.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <style name="TextAppearance.App.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+    </style>
+
+    <!-- Accessibility optimized touch targets -->
+    <style name="Widget.App.TouchTarget" parent="Widget.App.Base">
+        <item name="android:minWidth">44dp</item>
+        <item name="android:minHeight">44dp</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <!-- Elevated surfaces -->
+    <style name="Widget.App.ElevatedCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">@color/colorSurface</item>
+        <item name="cardElevation">8dp</item>
+        <item name="contentPadding">16dp</item>
+        <item name="android:outlineAmbientShadowColor">@color/colorPrimaryDark</item>
+        <item name="android:outlineSpotShadowColor">@color/colorPrimaryDark</item>
+    </style>
+
+    <!-- Status indicators -->
+    <style name="Widget.App.StatusIndicator" parent="Widget.App.Base">
+        <item name="android:minWidth">12dp</item>
+        <item name="android:minHeight">12dp</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="cornerRadius">6dp</item>
+    </style>
+</resources>
