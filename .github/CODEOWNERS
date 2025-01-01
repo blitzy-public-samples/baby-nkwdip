@@ -1,0 +1,76 @@
+# Unless a later match takes precedence, @project-leads will be requested for
+# review when someone opens a pull request
+* @project-leads
+
+# Android native code including audio processing components
+/src/android/** @android-team
+
+# iOS native code including audio capture modules
+/src/ios/** @ios-team
+
+# Backend services including API and ML processing
+/src/backend/** @backend-team
+
+# Web/React Native cross-platform components
+/src/web/** @frontend-team
+
+# Machine learning models and training code
+/src/ml/** @ml-team
+
+# Test files across all components
+/src/**/test/** @qa-team
+
+# Infrastructure and deployment configurations
+/infrastructure/** @devops-team
+*.yml @devops-team
+
+# Security-sensitive components
+/src/**/security* @security-team
+
+# Dependency management
+package*.json @dependency-managers
+*.gradle @android-team @dependency-managers
+Podfile* @ios-team @dependency-managers
+
+# Audio processing components
+/src/**/audio/** @audio-processing-team
+
+# Environment and security configurations
+*.env* @security-team @devops-team
+
+# Documentation
+/docs/** @technical-writers
+
+# Ensure security team reviews any encryption or auth changes
+/src/**/auth/** @security-team
+/src/**/crypto/** @security-team
+
+# CI/CD pipeline configurations
+/.github/workflows/** @devops-team
+
+# Database schema and migrations
+/src/**/db/migrations/** @backend-team @database-team
+
+# API specifications and documentation
+/src/**/api/** @backend-team @technical-writers
+
+# Monitoring and observability configurations
+/src/**/monitoring/** @devops-team @sre-team
+
+# Mobile platform-specific configurations
+/android/** @android-team
+/ios/** @ios-team
+
+# Shared utilities and core components
+/src/shared/** @project-leads @frontend-team @backend-team
+
+# Configuration files requiring security review
+*.config.js @security-team @devops-team
+*.conf @security-team @devops-team
+
+# Docker configurations
+Dockerfile* @devops-team
+docker-compose*.yml @devops-team
+
+# Terraform infrastructure code
+*.tf @devops-team @security-team
