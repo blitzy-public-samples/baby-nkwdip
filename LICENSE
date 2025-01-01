@@ -1,0 +1,118 @@
+BABY CRY ANALYZER SOFTWARE LICENSE AGREEMENT
+Version 1.0.0
+
+IMPORTANT: PLEASE READ THIS LICENSE AGREEMENT CAREFULLY BEFORE USING THE SOFTWARE
+
+1. PROPRIETARY RIGHTS AND CONFIDENTIALITY
+
+This software, known as "Baby Cry Analyzer" (the "Software"), including but not limited to its source code, machine learning models, algorithms, analysis methods, and associated documentation, is the proprietary and confidential property of the rights holder. All rights not expressly granted herein are reserved.
+
+2. LICENSE GRANT AND RESTRICTIONS
+
+2.1 Permitted Uses:
+- Internal deployment within authorized environments
+- Private use by authorized personnel
+- Operation within controlled environments
+- Access by authenticated and authorized users only
+
+2.2 Prohibited Uses:
+- Public distribution or sharing
+- Unauthorized copying or reproduction
+- Reverse engineering, decompiling, or disassembling
+- Commercial redistribution
+- Sublicensing or resale
+- Transfer to unauthorized third parties
+
+3. DATA PROTECTION AND COMPLIANCE
+
+3.1 GDPR Compliance
+- Data processing shall strictly follow GDPR requirements
+- Users retain all rights granted under GDPR
+- International data transfers must comply with GDPR transfer rules
+- Data minimization and purpose limitation principles apply
+- Right to erasure and data portability guaranteed
+
+3.2 HIPAA Compliance
+- Protected Health Information (PHI) handling follows HIPAA Security Rules
+- Implementation of required administrative, physical, and technical safeguards
+- Breach notification procedures as per HIPAA requirements
+- Business Associate Agreements required where applicable
+- Security incident reporting and response protocols
+
+3.3 COPPA Compliance
+- Verifiable parental consent required for data collection from children
+- Data collection limited to strictly necessary information
+- Strict data retention and deletion policies
+- Clear parental controls and oversight mechanisms
+- Regular compliance audits and updates
+
+4. INTELLECTUAL PROPERTY PROTECTION
+
+4.1 Machine Learning Models
+- All ML models are proprietary and protected
+- Training data and model architectures are trade secrets
+- No right to modify or create derivative models
+
+4.2 Algorithms and Methods
+- Analysis algorithms are confidential trade secrets
+- Pattern recognition methods are proprietary
+- Implementation details are protected intellectual property
+
+5. WARRANTY DISCLAIMER
+
+THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO:
+- Merchantability
+- Fitness for a particular purpose
+- Accuracy of analysis results
+- Non-infringement of third-party rights
+- Availability or continuity of service
+- Freedom from bugs or errors
+
+6. LIMITATION OF LIABILITY
+
+IN NO EVENT SHALL THE RIGHTS HOLDERS BE LIABLE FOR:
+- Direct, indirect, incidental, or consequential damages
+- Loss of data or business interruption
+- Service unavailability or degradation
+- Any damages arising from the use or inability to use the software
+- Any claims by third parties
+
+7. GOVERNING LAW AND JURISDICTION
+
+7.1 This Agreement shall be governed by [Jurisdiction]
+7.2 Dispute Resolution:
+- Mandatory arbitration for all disputes
+- Venue as specified in arbitration agreement
+- Governing law of the specified jurisdiction applies
+
+8. TERMINATION
+
+8.1 Rights holder may terminate this license immediately upon:
+- Breach of any term of this agreement
+- Unauthorized use or distribution
+- Violation of data protection requirements
+
+8.2 Upon termination:
+- All use must cease immediately
+- Software must be uninstalled
+- Data handling per termination protocols
+- Return or destruction of all copies
+
+9. CONTACT INFORMATION
+
+Legal Department:
+[Legal Contact Details]
+
+Compliance Office:
+[Compliance Officer Contact]
+
+Technical Support:
+[Technical Support Contact]
+
+10. VERSION AND UPDATES
+
+Current Version: 1.0.0
+Last Updated: [Project Inception Date]
+Review Cycle: Annual
+
+ALL RIGHTS RESERVED. This Agreement is the complete and exclusive statement of the agreement between the parties and supersedes all prior agreements, oral or written, and all other communications between the parties relating to the subject matter of this Agreement.
