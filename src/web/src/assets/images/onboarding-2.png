@@ -1,0 +1,24 @@
+[Binary PNG Image Data]
+File specifications:
+- Dimensions: 750x1334px
+- Color Profile: sRGB
+- Format: PNG-24 with transparency
+- Compression: Lossless
+- DPI: 300
+- Color Depth: 24-bit
+- Target File Size: < 200KB
+- Optimization: Responsive loading, lazy loading enabled
+- Primary Color: #007AFF
+- Secondary Color: #5856D6
+- Background: Transparent
+
+Image represents a modern, minimalist illustration showing sound wave analysis and pattern recognition capabilities of the Baby Cry Analyzer app, optimized for both light and dark themes with responsive breakpoints at 375px (mobile) and 750px (tablet).
+
+Accessibility metadata:
+- Alt text: "Illustration demonstrating the Baby Cry Analyzer's audio analysis and pattern recognition capabilities"
+- ARIA role: presentation
+- Screen reader text: "Illustration of baby cry analysis process"
+
+Asset versioning:
+- Version: 1.0.0
+- Last updated: 2024-01-20
