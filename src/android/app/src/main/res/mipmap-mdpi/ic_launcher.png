@@ -1,0 +1,31 @@
+Technical Specifications for Image Generation:
+- Dimensions: 48x48 pixels
+- DPI: 160 (mdpi)
+- Format: 32-bit PNG with alpha transparency
+- Color Space: sRGB
+- Scale Factor: 1.0x
+
+Adaptive Icon Implementation:
+- Background Layer: References ic_launcher_background.xml
+- Foreground Layer: References ic_launcher_foreground.xml
+- Legacy Support: Enabled for pre-Android 8.0
+
+Material Design Guidelines:
+- Follows Material Design 3.0 icon specifications
+- Maintains clear silhouette at 48x48
+- Implements proper padding (2dp) around icon content
+- Uses appropriate shadow and elevation effects
+- Supports both light and dark theme adaptations
+
+Key Features:
+- Distinct app symbol representing audio analysis
+- High contrast for visibility in app drawer
+- Clean edges for crisp rendering at mdpi density
+- Proper antialiasing for smooth curves
+- Consistent branding elements
+
+System Integration:
+- Properly referenced in AndroidManifest.xml
+- Supports adaptive icon layering
+- Maintains legacy launcher compatibility
+- Optimized for mdpi density devices
