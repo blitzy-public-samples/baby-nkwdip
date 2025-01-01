@@ -1,0 +1,123 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '18.x'
+  PYTHON_VERSION: '3.9'
+  TEST_COVERAGE_THRESHOLD: 80
+  MAX_WARNINGS: 0
+
+jobs:
+  quality:
+    name: Quality Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        component: [backend, web, ios, android]
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        if: matrix.component == 'backend'
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            ~/.npm
+            ~/.cache/pip
+          key: ${{ runner.os }}-${{ matrix.component }}-${{ hashFiles('**/package-lock.json', '**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.component }}-
+
+      - name: Install dependencies
+        run: |
+          if [ "${{ matrix.component }}" == "backend" ]; then
+            pip install -r requirements.txt
+          fi
+          npm ci
+
+      - name: Run ESLint
+        run: |
+          npm run lint:${{ matrix.component }} -- --max-warnings=${{ env.MAX_WARNINGS }}
+
+      - name: Run unit tests
+        env:
+          NODE_ENV: test
+        run: |
+          npm run test:${{ matrix.component }} -- --ci --coverage
+
+      - name: Check test coverage
+        run: |
+          npm run test:coverage:${{ matrix.component }} -- --coverageThreshold='{"global":{"branches":${{ env.TEST_COVERAGE_THRESHOLD }},"functions":${{ env.TEST_COVERAGE_THRESHOLD }},"lines":${{ env.TEST_COVERAGE_THRESHOLD }},"statements":${{ env.TEST_COVERAGE_THRESHOLD }}}}'
+
+      - name: SonarCloud Analysis
+        uses: SonarSource/sonarcloud-github-action@v1.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=baby-cry-analyzer-${{ matrix.component }}
+            -Dsonar.organization=baby-cry-analyzer
+            -Dsonar.sources=src/${{ matrix.component }}
+            -Dsonar.tests=src/${{ matrix.component }}/**/*.spec.ts,src/${{ matrix.component }}/**/*.test.ts
+            -Dsonar.javascript.lcov.reportPaths=coverage/${{ matrix.component }}/lcov.info
+            -Dsonar.testExecutionReportPaths=test-results/${{ matrix.component }}/junit.xml
+
+      - name: Run Snyk Security Scan
+        uses: snyk-actions/scan@v1
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: test
+          args: --severity-threshold=high --all-projects
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ matrix.component }}
+          path: test-results/${{ matrix.component }}
+          retention-days: 14
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-reports-${{ matrix.component }}
+          path: coverage/${{ matrix.component }}
+          retention-days: 14
+
+      - name: Notify on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: '#ci-failures'
+          SLACK_COLOR: 'danger'
+          SLACK_TITLE: 'Quality Check Failed'
+          SLACK_MESSAGE: 'Quality checks failed for ${{ matrix.component }} component'
+          SLACK_FOOTER: 'Baby Cry Analyzer CI/CD'
