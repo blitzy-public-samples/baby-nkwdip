@@ -1,0 +1,43 @@
+// React Native Gradle Plugin Version: 0.71.0
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            // React Native dependency repository
+            url "$rootDir/../node_modules/react-native/android"
+        }
+    }
+}
+
+// Root project name for the Baby Cry Analyzer Android application
+rootProject.name = "BabyCryAnalyzer"
+
+// Include the main application module
+include ':app'
+
+// Apply React Native specific Gradle settings
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesSettingsGradle(settings)
+
+// Enable Gradle build cache for improved build performance
+buildCache {
+    local {
+        enabled = true
+    }
+}
+
+// Enable parallel execution for faster builds
+gradle.startParameter.setParallelProjectExecutionEnabled(true)
+
+// Enable configuration cache for build optimization
+gradle.startParameter.setConfigurationCache(true)
