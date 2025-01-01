@@ -1,0 +1,210 @@
+{
+  "common": {
+    "app_name": "Baby Cry Analyzer",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "confirm": "Confirm",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "aria_labels": {
+      "loading": "Application is loading, please wait",
+      "navigation": "Main navigation",
+      "action_button": "Action button for {action}",
+      "close_dialog": "Close current dialog",
+      "menu": "Main menu"
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm Password",
+    "forgot_password": "Forgot Password?",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?",
+    "sign_up": "Sign Up",
+    "sign_in": "Sign In",
+    "aria_labels": {
+      "email_input": "Enter your email address",
+      "password_input": "Enter your password, minimum 8 characters",
+      "login_button": "Click to log in to your account",
+      "register_button": "Click to create a new account"
+    }
+  },
+  "onboarding": {
+    "welcome": "Welcome to Baby Cry Analyzer",
+    "get_started": "Let's Get Started",
+    "setup_profile": "Set Up Baby Profile",
+    "setup_monitoring": "Configure Monitoring",
+    "steps": {
+      "profile": "Create Profile",
+      "settings": "Configure Settings",
+      "permissions": "Grant Permissions",
+      "ready": "Ready to Start"
+    },
+    "aria_labels": {
+      "progress": "Onboarding progress: Step {current} of {total}",
+      "next_step": "Proceed to next step",
+      "previous_step": "Return to previous step"
+    }
+  },
+  "monitor": {
+    "start": "Start Monitoring",
+    "stop": "Stop Monitoring",
+    "analyzing": "Analyzing...",
+    "noise_level": "Noise Level",
+    "pattern_match": "Pattern Match",
+    "confidence": "Confidence",
+    "need_type": "Need Type",
+    "recommendations": "Recommendations",
+    "technical_terms": {
+      "pattern_match": "How closely the cry matches known patterns",
+      "confidence_score": "Certainty level of the analysis",
+      "noise_level": "Amount of background noise detected"
+    },
+    "aria_labels": {
+      "monitor_button": "Button to {action} cry monitoring",
+      "analysis_status": "Current analysis status: {status}",
+      "confidence_meter": "Analysis confidence level: {level}%"
+    }
+  },
+  "history": {
+    "title": "Cry History",
+    "filters": {
+      "date_range": "Date Range",
+      "need_type": "Need Type",
+      "confidence": "Confidence Level"
+    },
+    "view_options": {
+      "list": "List View",
+      "calendar": "Calendar View",
+      "statistics": "Statistics View"
+    },
+    "aria_labels": {
+      "filter_button": "Filter history records",
+      "record_details": "View details for cry record from {datetime}",
+      "export_data": "Export history data"
+    }
+  },
+  "profile": {
+    "baby_info": {
+      "name": "Baby's Name",
+      "birth_date": "Date of Birth",
+      "gender": "Gender",
+      "weight": "Weight",
+      "height": "Height"
+    },
+    "preferences": {
+      "notification_type": "Notification Preferences",
+      "monitoring_sensitivity": "Monitoring Sensitivity",
+      "background_noise": "Background Noise Filtering"
+    },
+    "aria_labels": {
+      "edit_profile": "Edit baby profile information",
+      "save_changes": "Save profile changes",
+      "upload_photo": "Upload baby's photo"
+    }
+  },
+  "settings": {
+    "app_settings": {
+      "language": "Language",
+      "theme": "Theme",
+      "notifications": "Notifications",
+      "data_usage": "Data Usage",
+      "storage": "Storage Management"
+    },
+    "monitoring": {
+      "sensitivity": "Monitoring Sensitivity",
+      "background_noise": "Background Noise Filter",
+      "continuous_mode": "Continuous Monitoring"
+    },
+    "aria_labels": {
+      "settings_option": "Configure {setting} settings",
+      "toggle_switch": "Toggle {feature} on or off",
+      "slider_control": "Adjust {setting} level"
+    }
+  },
+  "notifications": {
+    "cry_detected": "Baby Cry Detected",
+    "analysis_complete": "Analysis Complete",
+    "action_needed": "Action Needed",
+    "types": {
+      "push": "Push Notifications",
+      "in_app": "In-App Notifications",
+      "email": "Email Notifications"
+    },
+    "aria_labels": {
+      "notification_item": "Notification: {message}",
+      "clear_all": "Clear all notifications",
+      "settings": "Notification settings"
+    }
+  },
+  "errors": {
+    "general": "An error occurred. Please try again.",
+    "network": "Network connection error. Please check your connection.",
+    "auth": {
+      "invalid_credentials": "Invalid email or password",
+      "weak_password": "Password must be at least 8 characters long",
+      "email_in_use": "Email address is already in use"
+    },
+    "monitoring": {
+      "microphone_access": "Unable to access microphone",
+      "background_noise": "High background noise detected",
+      "analysis_failed": "Unable to analyze cry pattern"
+    },
+    "aria_labels": {
+      "error_message": "Error: {message}",
+      "retry_button": "Retry failed action"
+    }
+  },
+  "accessibility": {
+    "screen_reader": {
+      "page_title": "Current page: {title}",
+      "loading_state": "Content is loading",
+      "error_state": "Error occurred: {message}",
+      "success_state": "Action completed successfully: {message}",
+      "navigation_hint": "Use swipe gestures to navigate between sections"
+    },
+    "announcements": {
+      "cry_detected": "Baby cry detected, starting analysis",
+      "analysis_complete": "Analysis complete, showing results",
+      "action_required": "Action required: {action}"
+    }
+  },
+  "dateTime": {
+    "formats": {
+      "short_date": "MM/DD/YYYY",
+      "long_date": "MMMM D, YYYY",
+      "time": "h:mm A",
+      "datetime": "MM/DD/YYYY h:mm A"
+    },
+    "aria_labels": {
+      "date_picker": "Select a date",
+      "time_picker": "Select a time"
+    }
+  },
+  "privacy": {
+    "consent": {
+      "audio_recording": "I consent to audio recording for cry analysis",
+      "data_collection": "I consent to data collection for pattern learning",
+      "data_sharing": "I consent to anonymous data sharing for service improvement"
+    },
+    "notices": {
+      "data_usage": "How we use your data",
+      "data_storage": "How we store your data",
+      "data_rights": "Your data privacy rights"
+    },
+    "aria_labels": {
+      "consent_checkbox": "Checkbox to provide consent for {purpose}",
+      "privacy_notice": "Important privacy information about {topic}"
+    }
+  }
+}
