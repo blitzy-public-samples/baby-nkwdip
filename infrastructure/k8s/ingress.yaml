@@ -1,0 +1,85 @@
+# Kubernetes Ingress manifest for Baby Cry Analyzer
+# Version: networking.k8s.io/v1
+# Dependencies: kubernetes-ingress v1.24+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: baby-cry-analyzer-ingress
+  namespace: baby-cry-analyzer
+  labels:
+    app: baby-cry-analyzer
+    environment: ${ENV}
+    tier: frontend
+    managed-by: terraform
+  annotations:
+    # Ingress class and basic configuration
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    
+    # CORS configuration
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    
+    # SSL/TLS configuration
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    
+    # WebSocket configuration
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection "upgrade";
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+    nginx.ingress.kubernetes.io/websocket-services: "backend-service"
+    
+    # Session affinity configuration
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+    
+    # Security headers and SSL configuration
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384"
+    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+    nginx.ingress.kubernetes.io/hsts: "true"
+    nginx.ingress.kubernetes.io/hsts-max-age: "31536000"
+    nginx.ingress.kubernetes.io/hsts-include-subdomains: "true"
+    nginx.ingress.kubernetes.io/hsts-preload: "true"
+
+spec:
+  tls:
+    - hosts:
+        - api.babycryanalyzer.com
+      secretName: babycryanalyzer-tls
+  rules:
+    - host: api.babycryanalyzer.com
+      http:
+        paths:
+          # REST API endpoints
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 3000
+          
+          # WebSocket endpoints
+          - path: /ws
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-service
+                port:
+                  number: 3001
+          
+          # Machine Learning endpoints
+          - path: /ml
+            pathType: Prefix
+            backend:
+              service:
+                name: ml-service
+                port:
+                  number: 5000
