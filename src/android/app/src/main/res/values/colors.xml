@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Theme Colors -->
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- Background Colors -->
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorSurface">#FAFAFA</color>
+
+    <!-- Status Colors - WCAG 2.1 AA compliant -->
+    <color name="colorError">#B00020</color>
+    <color name="colorSuccess">#4CAF50</color>
+    <color name="colorWarning">#FFC107</color>
+
+    <!-- Text Colors - 4.5:1 minimum contrast ratio -->
+    <color name="textColorPrimary">#212121</color>
+    <color name="textColorSecondary">#757575</color>
+
+    <!-- UI Element Colors -->
+    <color name="dividerColor">#E0E0E0</color>
+
+    <!-- Monitoring Feature Colors -->
+    <color name="waveformColor">#2196F3</color>
+    <color name="waveformBackgroundColor">#E3F2FD</color>
+    <color name="monitorActiveColor">#4CAF50</color>
+    <color name="monitorInactiveColor">#9E9E9E</color>
+
+    <!-- Confidence Level Indicators -->
+    <color name="confidenceHighColor">#4CAF50</color>
+    <color name="confidenceMediumColor">#FFC107</color>
+    <color name="confidenceLowColor">#F44336</color>
+</resources>
