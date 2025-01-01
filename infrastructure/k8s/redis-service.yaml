@@ -1,0 +1,54 @@
+# Redis Service Manifest v1.24+
+# Provides internal network access to Redis cache instances with high availability
+# and topology-aware routing for optimal performance
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: baby-cry-analyzer
+  labels:
+    app: redis
+    tier: cache
+    component: database
+    part-of: baby-cry-analyzer
+    managed-by: kubernetes
+  annotations:
+    # Enable topology-aware routing for better latency
+    service.kubernetes.io/topology-aware-hints: "auto"
+    service.kubernetes.io/topology-mode: "auto"
+    # Ensure service is only accessible internally
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    # Enable Prometheus metrics scraping
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "6379"
+
+spec:
+  # Use ClusterIP for internal-only access
+  type: ClusterIP
+  
+  # Define Redis port configuration
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: redis
+      protocol: TCP
+  
+  # Select Redis pods using matching labels
+  selector:
+    app: redis
+    tier: cache
+  
+  # Enable client session affinity for better performance
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800  # 3 hour timeout
+  
+  # Only publish endpoints when pods are ready
+  publishNotReadyAddresses: false
+  
+  # Configure internal traffic policy
+  internalTrafficPolicy: Cluster
+  
+  # Enable dual-stack IP support (IPv4/IPv6)
+  ipFamilyPolicy: PreferDualStack
