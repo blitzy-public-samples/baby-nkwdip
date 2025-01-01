@@ -1,0 +1,16 @@
+{
+  "info": {
+    "version": 1,
+    "author": "xcode"
+  },
+  "properties": {
+    "provides-namespace": true,
+    "preserves-vector-representation": false,
+    "platform": "ios",
+    "development-region": "en",
+    "compression": "automatic",
+    "color-space": "srgb",
+    "image-scaling": "automatic",
+    "template-rendering": false
+  }
+}
