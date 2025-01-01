@@ -1,0 +1,95 @@
+{
+  "expo": {
+    "name": "Baby Cry Analyzer",
+    "slug": "baby-cry-analyzer",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/images/logo.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./src/assets/images/onboarding-1.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD",
+      "enabled": true
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.babycryanalyzer",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Baby Cry Analyzer needs access to your microphone to record and analyze baby cries in real-time",
+        "NSCameraUsageDescription": "Baby Cry Analyzer needs access to your camera for profile pictures and visual monitoring",
+        "NSLocationWhenInUseUsageDescription": "Your location helps us connect you with nearby experts and community members",
+        "UIBackgroundModes": [
+          "audio",
+          "fetch",
+          "remote-notification",
+          "processing"
+        ],
+        "UIRequiredDeviceCapabilities": [
+          "armv7",
+          "microphone"
+        ]
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "minimalVersion": "14.0"
+    },
+    "android": {
+      "package": "com.babycryanalyzer",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/icons/baby.svg",
+        "backgroundColor": "#FFFFFF"
+      },
+      "permissions": [
+        "RECORD_AUDIO",
+        "CAMERA",
+        "WAKE_LOCK",
+        "FOREGROUND_SERVICE",
+        "ACCESS_FINE_LOCATION",
+        "RECEIVE_BOOT_COMPLETED"
+      ],
+      "minSdkVersion": 29,
+      "targetSdkVersion": 33
+    },
+    "web": {
+      "favicon": "./src/assets/images/logo.png"
+    },
+    "plugins": [
+      "react-native-audio-recorder-player",
+      "react-native-permissions",
+      "react-native-background-fetch",
+      "react-native-firebase",
+      "@react-native-community/netinfo"
+    ],
+    "locales": {
+      "en": "./src/i18n/en.json",
+      "es": "./src/i18n/es.json",
+      "zh": "./src/i18n/zh.json"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "baby-cry-analyzer"
+      },
+      "regions": [
+        "na",
+        "eu",
+        "ap"
+      ],
+      "supportedLanguages": [
+        "en",
+        "es",
+        "zh"
+      ]
+    }
+  }
+}
