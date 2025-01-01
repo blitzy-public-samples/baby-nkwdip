@@ -1,0 +1,89 @@
+node_modules
+dist
+coverage
+.git
+*.log
+npm-debug.log*
+
+# Development configurations
+.env*
+.gitignore
+.eslintrc*
+.prettierrc*
+jest.config.*
+docker-compose*
+.vscode
+.idea
+
+# Test files and directories
+test
+__tests__
+*.test.ts
+*.spec.ts
+scripts
+
+# ML and data protection
+*.model
+training-data
+datasets
+audio-processing-config
+sample-audio
+
+# Security and certificates
+*.cert
+*.crt
+*.key
+*.pem
+*.p12
+*secret*
+.aws
+.ssh
+
+# Audit and security reports
+audit-reports
+security-scans
+vulnerability-reports
+
+# Performance monitoring
+metrics
+traces
+performance-logs
+
+# Documentation
+README.md
+CHANGELOG.md
+docs
+
+# Healthcare data protection
+*-phi-*
+medical-reference-data
+
+# Temporary files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Container orchestration
+kubernetes
+docker-compose*
+Dockerfile*
+.dockerignore
+
+# Debug files
+.chrome
+.vscode-test
+*.heapsnapshot
+*.cpuprofile
+
+# Cache directories
+.npm
+.eslintcache
+.stylelintcache
+.prettiercache
+
+# Build tools
+.gradle
+.maven
+build
+target
