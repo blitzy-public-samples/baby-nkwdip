@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108"
+    android:tint="@color/colorPrimary"
+    android:autoMirrored="true"
+    android:alpha="1.0">
+
+    <!-- Face outline - Circular shape with rounded stroke -->
+    <path
+        android:name="face_outline"
+        android:pathData="M56,28 C38.327,28 24,42.327 24,60 C24,77.673 38.327,92 56,92 C73.673,92 88,77.673 88,60 C88,42.327 73.673,28 56,28"
+        android:strokeWidth="4"
+        android:strokeColor="@color/colorPrimary"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="none" />
+
+    <!-- Eyes - Simple curved line representing gentle expression -->
+    <path
+        android:name="eyes"
+        android:pathData="M44,52 C44,45.373 49.373,40 56,40 C62.627,40 68,45.373 68,52"
+        android:strokeWidth="4"
+        android:strokeColor="@color/colorPrimary"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="none" />
+
+    <!-- Mouth - Simple horizontal line -->
+    <path
+        android:name="mouth"
+        android:pathData="M50,64 L62,64"
+        android:strokeWidth="4"
+        android:strokeColor="@color/colorPrimary"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="none" />
+</vector>
