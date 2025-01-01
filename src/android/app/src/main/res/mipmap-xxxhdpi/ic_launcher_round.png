@@ -1,0 +1,19 @@
+Technical Specifications:
+- Dimensions: 192x192 pixels
+- Format: PNG with alpha channel
+- Density: xxxhdpi
+- Color Depth: 32-bit RGBA
+- Style: Round adaptive icon
+- Material Design 3.0 compliant
+- Optimized for Android 10+
+
+The image should be created according to these specifications using appropriate image editing software and placed at the specified path.
+
+Key characteristics:
+1. Follows Material Design 3.0 Adaptive Icon guidelines
+2. Maintains visual clarity at xxxhdpi density
+3. Supports system-wide dark mode
+4. Implements proper padding and safe zones
+5. Uses vector-based scaling where possible
+6. Preserves transparency for adaptive shapes
+7. Optimized for high-density displays
