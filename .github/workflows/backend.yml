@@ -1,0 +1,227 @@
+name: Backend CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/backend/**'
+      - 'infrastructure/docker/backend.dockerfile'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/backend/**'
+      - 'infrastructure/docker/backend.dockerfile'
+
+env:
+  NODE_ENV: ${{ github.event_name == 'push' && 'production' || 'development' }}
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  test:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'src/backend/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: src/backend
+        run: |
+          npm ci
+          npm audit
+
+      - name: Run ESLint
+        working-directory: src/backend
+        run: npm run lint
+
+      - name: Run unit tests
+        working-directory: src/backend
+        run: npm run test:cov
+
+      - name: Run integration tests
+        working-directory: src/backend
+        run: npm run test:e2e
+
+      - name: Upload test coverage
+        uses: sonarsource/sonarcloud-github-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: src/backend
+
+  security_scan:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Run Snyk Security Scan
+        uses: snyk/actions/node@v1
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+      - name: Run OWASP Dependency Check
+        working-directory: src/backend
+        run: |
+          npm audit
+          npm audit fix --audit-level=critical
+
+      - name: SonarQube Security Analysis
+        uses: sonarsource/sonarcloud-github-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=baby-cry-analyzer-backend
+            -Dsonar.organization=baby-cry-analyzer
+            -Dsonar.sources=src
+            -Dsonar.tests=test
+            -Dsonar.security.enabled=true
+
+  build:
+    name: Build & Push Image
+    needs: [test, security_scan]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          buildkitd-flags: --debug
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: infrastructure/docker/backend.dockerfile
+          push: true
+          tags: |
+            ${{ env.ECR_REGISTRY }}/backend:${{ env.IMAGE_TAG }}
+            ${{ env.ECR_REGISTRY }}/backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=${{ env.NODE_ENV }}
+
+      - name: Scan container image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.ECR_REGISTRY }}/backend:${{ env.IMAGE_TAG }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+  deploy:
+    name: Deploy
+    needs: [build]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [development, staging, production]
+    environment:
+      name: ${{ matrix.environment }}
+      url: ${{ matrix.environment == 'production' && 'https://api.babycryanalyzer.com' || format('https://{0}-api.babycryanalyzer.com', matrix.environment) }}
+    
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Update kubeconfig
+        run: aws eks update-kubeconfig --name baby-cry-analyzer-${{ matrix.environment }}
+
+      - name: Deploy to ${{ matrix.environment }}
+        run: |
+          # Blue-Green Deployment
+          kubectl create namespace baby-cry-analyzer-${{ matrix.environment }} --dry-run=client -o yaml | kubectl apply -f -
+          
+          # Deploy new version (green)
+          kubectl set image deployment/backend backend=${{ env.ECR_REGISTRY }}/backend:${{ env.IMAGE_TAG }} -n baby-cry-analyzer-${{ matrix.environment }}
+          
+          # Wait for rollout
+          kubectl rollout status deployment/backend -n baby-cry-analyzer-${{ matrix.environment }} --timeout=300s
+
+      - name: Health check
+        run: |
+          HEALTH_CHECK_URL="${{ matrix.environment == 'production' && 'https://api.babycryanalyzer.com/health' || format('https://{0}-api.babycryanalyzer.com/health', matrix.environment) }}"
+          for i in {1..30}; do
+            response=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_CHECK_URL)
+            if [ $response -eq 200 ]; then
+              echo "Health check passed"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Health check failed"
+          exit 1
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          kubectl rollout undo deployment/backend -n baby-cry-analyzer-${{ matrix.environment }}
+          kubectl rollout status deployment/backend -n baby-cry-analyzer-${{ matrix.environment }} --timeout=300s
+
+      - name: Notify Slack
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Send deployment status email
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "Deployment Status - ${{ matrix.environment }} - ${{ job.status }}"
+          to: devops@babycryanalyzer.com
+          from: GitHub Actions
+          body: |
+            Deployment to ${{ matrix.environment }} environment ${{ job.status }}
+            
+            Commit: ${{ github.sha }}
+            Environment: ${{ matrix.environment }}
+            Status: ${{ job.status }}
+            
+            For more details, visit: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
