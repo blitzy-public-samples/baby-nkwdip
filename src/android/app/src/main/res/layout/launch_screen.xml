@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/splash_screen"
+    android:fitsSystemWindows="true"
+    android:layerType="hardware"
+    android:importantForAccessibility="no"
+    android:theme="@style/AppTheme.Launcher"
+    tools:viewBindingIgnore="true">
+
+    <!-- 
+        Launch screen layout optimized for performance and visual appeal
+        - Hardware acceleration enabled for smooth rendering
+        - System window insets handled properly
+        - Accessibility ignored as this is a temporary screen
+        - Follows Material Design 3.0 guidelines
+        - Supports both light and dark themes through drawable reference
+    -->
+
+</LinearLayout>
