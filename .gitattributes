@@ -1,0 +1,84 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# JavaScript/TypeScript files
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+
+# Android source files
+*.kt text eol=lf
+*.java text eol=lf
+*.gradle text eol=lf
+gradlew text eol=lf
+*.properties text eol=lf
+
+# iOS source files
+*.swift text eol=lf
+*.h text eol=lf
+*.m text eol=lf
+*.plist text eol=lf
+*.entitlements text eol=lf
+*.pbxproj text -diff merge=union
+*.xcscheme text -diff merge=union
+*.xcworkspacedata text -diff merge=union
+
+# Shell scripts and batch files
+*.sh text eol=lf
+*.bat text eol=crlf
+
+# Configuration files
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.xml text eol=lf
+*.lock text eol=lf
+
+# Documentation
+*.md text eol=lf
+*.mdx text eol=lf
+*.txt text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.mp3 binary
+*.wav binary
+*.aac binary
+
+# React Native specific
+*.bundle text eol=lf
+*.jsbundle text eol=lf
+
+# Xcode specific
+*.mode1v3 -text -diff
+*.mode2v3 -text -diff
+*.perspectivev3 -text -diff
+*.xcuserstate binary
+*.xcworkspace -text -diff
+
+# Android specific
+*.keystore binary
+*.jks binary
+*.aar binary
+*.jar binary
+*.so binary
+*.dex binary
+
+# Linguist overrides
+*.generated.* linguist-generated=true
+*.pb.go linguist-generated=true
+*.pb.js linguist-generated=true
+
+# Vendored code
+vendor/* linguist-vendored
+node_modules/* linguist-vendored
