@@ -1,0 +1,10 @@
+- Dimensions: 96x96 pixels
+- Format: PNG (lossless compression)
+- Density: xhdpi (~320dpi)
+- Style: Material Design adaptive round icon
+- Composed of:
+  - Background layer from ic_launcher_background.xml
+  - Foreground layer from ic_launcher_foreground.xml
+  - Masked to circular shape for round launcher icon support
+
+The actual icon should be created using Android Studio's Image Asset Studio or a similar tool that can properly generate adaptive icons following Material Design guidelines.]
