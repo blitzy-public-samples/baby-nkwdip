@@ -1,0 +1,63 @@
+# Fastlane Match Configuration v2.212.2
+# Secure certificate and provisioning profile management for Baby Cry Analyzer iOS app
+# Implements enhanced security features with OpenSSL encryption and environment variable protection
+
+# Import app identifier from Appfile with validation
+require_relative 'Appfile'
+
+# Git repository URL for encrypted certificate storage
+# Requires MATCH_GIT_URL environment variable
+git_url(ENV["MATCH_GIT_URL"])
+
+# Enforce git-based storage mode for enhanced security
+storage_mode("git")
+
+# Certificate type configuration
+type("development")
+
+# App bundle identifier configuration with validation
+app_identifier([
+  "com.babycryanalyzer"
+])
+
+# Apple Developer Portal authentication
+# Requires APPLE_ID environment variable
+username(ENV["APPLE_ID"])
+
+# Team identifier configuration
+# Requires TEAM_ID environment variable
+team_id(ENV["TEAM_ID"])
+
+# Git branch configuration for certificate storage
+git_branch("main")
+
+# Enable readonly mode for enhanced security in CI environment
+readonly(true)
+
+# Basic authentication for Git repository access
+# Requires MATCH_GIT_BASIC_AUTH environment variable
+git_basic_authorization(ENV["MATCH_GIT_BASIC_AUTH"])
+
+# Enable verbose logging for debugging
+verbose(true)
+
+# Additional security configurations
+platform :ios
+
+# Certificate force renewal configuration
+force_for_new_devices(true)
+
+# Shallow clone configuration for improved performance
+shallow_clone(true)
+
+# Skip confirmation prompts in CI environment
+skip_confirmation(true)
+
+# Certificate output path configuration
+output_path("./certificates")
+
+# Certificate cleanup configuration
+skip_docs(true)
+
+# Fail if no valid certificates are found
+fail_on_name_taken(true)
