@@ -1,0 +1,19 @@
+Image Specifications:
+- Dimensions: 96x96 pixels
+- Format: PNG with lossless compression
+- Color Space: sRGB
+- Background: Transparent
+- Density: xhdpi (2.0x scale factor)
+- Platform: Android (min SDK 24, target SDK 33)
+
+Adaptive Icon Requirements:
+- Background Layer: 108dp x 108dp safe zone with 18dp content inset
+- Foreground Layer: 108dp x 108dp safe zone with 18dp content inset
+- Supported Shapes: circle, square, rounded_square, squircle
+
+Material Design 3.0 Guidelines:
+- Keyline Grid: 8dp
+- Minimum Size: 24dp
+- Padding: 4dp
+
+The actual icon should be created by a graphic designer or visual assets team following these specifications.
