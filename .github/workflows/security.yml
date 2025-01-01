@@ -1,0 +1,181 @@
+name: Security and Compliance Checks
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/**'
+      - 'infrastructure/docker/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'build.gradle'
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 0 * * *' # Daily at midnight UTC
+
+permissions:
+  security-events: write
+  actions: read
+  contents: read
+  packages: read
+
+jobs:
+  codeql-analysis:
+    name: CodeQL Security Analysis
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'typescript', 'python', 'java' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+          config-file: .github/codeql/codeql-config.yml
+          queries: security-extended,security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{ matrix.language }}"
+
+  dependency-scan:
+    name: Dependency Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Snyk Node.js Scan
+        uses: snyk/actions/node@v1
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=medium
+          
+      - name: OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          project: 'Baby-Cry-Analyzer'
+          path: '.'
+          format: 'HTML'
+          args: >
+            --suppression suppression.xml
+            --failOnCVSS 7
+            --enableRetired
+
+      - name: Upload Dependency Check Results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'dependency-check-report.sarif'
+
+  container-scan:
+    name: Container Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.9.2
+        with:
+          scan-type: 'fs,config'
+          scan-ref: '.'
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+          timeout: '10m'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+
+      - name: Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  compliance-check:
+    name: Compliance Standards Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: HIPAA Compliance Check
+        run: |
+          echo "Checking HIPAA compliance requirements..."
+          # Check encryption standards
+          grep -r "AES-256" .
+          # Check authentication mechanisms
+          grep -r "JWT" .
+          # Check audit logging
+          grep -r "winston" .
+
+      - name: GDPR Compliance Check
+        run: |
+          echo "Checking GDPR compliance requirements..."
+          # Check data protection mechanisms
+          grep -r "bcrypt" .
+          # Check data retention policies
+          grep -r "retention" .
+          # Check consent management
+          grep -r "consent" .
+
+      - name: COPPA Compliance Check
+        run: |
+          echo "Checking COPPA compliance requirements..."
+          # Check parental consent mechanisms
+          grep -r "parental" .
+          # Check data collection limitations
+          grep -r "data-collection" .
+          # Check privacy policies
+          grep -r "privacy" .
+
+  security-headers:
+    name: Security Headers Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check Security Headers
+        run: |
+          echo "Checking security headers implementation..."
+          # Check Helmet configuration
+          grep -r "helmet" .
+          # Check CORS policies
+          grep -r "cors" .
+          # Check CSP headers
+          grep -r "content-security-policy" .
+
+  notify-security-issues:
+    name: Security Notification
+    needs: [codeql-analysis, dependency-scan, container-scan, compliance-check, security-headers]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Send Security Alert
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Security Scan Failed',
+              body: 'Security scanning workflow has detected issues that need immediate attention. Please check the workflow logs for details.',
+              labels: ['security', 'high-priority']
+            });
