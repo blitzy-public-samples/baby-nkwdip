@@ -1,0 +1,147 @@
+# Redis StatefulSet Configuration v7.0
+# Purpose: Manages Redis cache instances for Baby Cry Analyzer application
+# Dependencies: kubernetes v1.24+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: baby-cry-analyzer
+  labels:
+    app: redis
+    tier: cache
+    component: database
+spec:
+  replicas: 3  # High availability configuration with 3 replicas
+  serviceName: redis
+  selector:
+    matchLabels:
+      app: redis
+      tier: cache
+  template:
+    metadata:
+      labels:
+        app: redis
+        tier: cache
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9121"
+    spec:
+      # Pod anti-affinity ensures Redis pods are scheduled on different nodes
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - redis
+            topologyKey: kubernetes.io/hostname
+      
+      # Security context for pod-level security settings
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
+      
+      # Init container to set system settings
+      initContainers:
+      - name: init-sysctl
+        image: busybox:1.34
+        command:
+        - /bin/sh
+        - -c
+        - |
+          sysctl -w net.core.somaxconn=65535
+          sysctl -w vm.overcommit_memory=1
+        securityContext:
+          privileged: true
+      
+      containers:
+      - name: redis
+        image: redis:7.0-alpine
+        command:
+        - redis-server
+        - /usr/local/etc/redis/redis.conf
+        ports:
+        - name: redis
+          containerPort: 6379
+          protocol: TCP
+        
+        # Resource limits and requests
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        
+        # Volume mounts for data and configuration
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        - name: redis-config
+          mountPath: /usr/local/etc/redis
+        
+        # Health checks
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 2
+        
+        # Environment variables
+        env:
+        - name: MASTER
+          value: "true"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secrets
+              key: redis-password
+        
+        # Security context for container-level security
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      
+      volumes:
+      - name: redis-config
+        configMap:
+          name: baby-cry-analyzer-config
+          items:
+          - key: redis.conf
+            path: redis.conf
+      
+      # Pod disruption budget reference
+      terminationGracePeriodSeconds: 60
+  
+  # Persistent volume claim templates
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+      storageClassName: standard
+  
+  # Update strategy for rolling updates
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
