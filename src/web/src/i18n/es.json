@@ -1,0 +1,244 @@
+{
+  "common": {
+    "appName": "Analizador de Llanto del Bebé",
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "done": "Listo",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "yes": "Sí",
+    "no": "No",
+    "success": "Éxito",
+    "error": "Error",
+    "warning": "Advertencia",
+    "info": "Información",
+    "required": "Obligatorio",
+    "optional": "Opcional",
+    "menu": "Menú",
+    "close": "Cerrar"
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "loginButton": "Iniciar sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUp": "Regístrate",
+      "aria": {
+        "emailInput": "Ingresa tu correo electrónico",
+        "passwordInput": "Ingresa tu contraseña",
+        "loginButton": "Botón para iniciar sesión"
+      }
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "registerButton": "Registrarse",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signIn": "Inicia sesión",
+      "aria": {
+        "nameInput": "Ingresa tu nombre completo",
+        "emailInput": "Ingresa tu correo electrónico",
+        "passwordInput": "Crea una contraseña segura",
+        "confirmPasswordInput": "Confirma tu contraseña"
+      }
+    }
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "¡Bienvenido/a!",
+      "description": "Vamos a configurar el perfil de tu bebé",
+      "getStarted": "Comenzar"
+    },
+    "babyProfile": {
+      "title": "Perfil del bebé",
+      "name": "Nombre del bebé",
+      "birthDate": "Fecha de nacimiento",
+      "gender": {
+        "label": "Género",
+        "male": "Niño",
+        "female": "Niña",
+        "preferNotToSay": "Prefiero no decirlo"
+      },
+      "aria": {
+        "nameInput": "Ingresa el nombre de tu bebé",
+        "birthDatePicker": "Selecciona la fecha de nacimiento"
+      }
+    }
+  },
+  "monitor": {
+    "status": {
+      "active": "Monitoreo activo",
+      "inactive": "Monitoreo inactivo",
+      "analyzing": "Analizando...",
+      "detected": "Llanto detectado"
+    },
+    "actions": {
+      "start": "Iniciar monitoreo",
+      "stop": "Detener monitoreo",
+      "record": "Grabar",
+      "pause": "Pausar",
+      "resume": "Reanudar"
+    },
+    "analysis": {
+      "confidence": "Nivel de confianza",
+      "pattern": "Patrón detectado",
+      "recommendation": "Recomendación",
+      "aria": {
+        "waveform": "Visualización de ondas de sonido",
+        "confidenceMeter": "Medidor de nivel de confianza"
+      }
+    },
+    "needs": {
+      "hunger": "Hambre",
+      "sleep": "Sueño",
+      "pain": "Dolor",
+      "discomfort": "Incomodidad",
+      "attention": "Atención",
+      "colic": "Cólico"
+    }
+  },
+  "history": {
+    "title": "Historial",
+    "filters": {
+      "dateRange": "Rango de fechas",
+      "pattern": "Patrón",
+      "apply": "Aplicar filtros"
+    },
+    "timeline": {
+      "today": "Hoy",
+      "yesterday": "Ayer",
+      "thisWeek": "Esta semana",
+      "lastWeek": "Semana pasada"
+    },
+    "export": {
+      "title": "Exportar datos",
+      "pdf": "Exportar como PDF",
+      "csv": "Exportar como CSV"
+    }
+  },
+  "profile": {
+    "title": "Perfil",
+    "babyInfo": {
+      "title": "Información del bebé",
+      "age": "Edad",
+      "weight": "Peso",
+      "height": "Altura"
+    },
+    "development": {
+      "title": "Desarrollo",
+      "milestones": "Hitos",
+      "growth": "Crecimiento"
+    },
+    "preferences": {
+      "title": "Preferencias",
+      "language": "Idioma",
+      "notifications": "Notificaciones",
+      "theme": "Tema"
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "audio": {
+      "title": "Configuración de audio",
+      "sensitivity": "Sensibilidad",
+      "noiseReduction": "Reducción de ruido",
+      "backgroundNoise": "Ruido de fondo"
+    },
+    "notifications": {
+      "title": "Notificaciones",
+      "push": "Notificaciones push",
+      "email": "Notificaciones por correo",
+      "sound": "Sonido",
+      "vibration": "Vibración"
+    },
+    "privacy": {
+      "title": "Privacidad",
+      "dataStorage": "Almacenamiento de datos",
+      "audioRecording": "Grabación de audio",
+      "sharing": "Compartir datos"
+    }
+  },
+  "notifications": {
+    "cry": {
+      "detected": "Llanto detectado",
+      "analyzing": "Analizando el llanto...",
+      "result": "Tu bebé podría tener {{need}}",
+      "aria": {
+        "alert": "Alerta de llanto detectado"
+      }
+    },
+    "actions": {
+      "view": "Ver detalles",
+      "dismiss": "Descartar"
+    }
+  },
+  "errors": {
+    "auth": {
+      "invalidEmail": "Correo electrónico inválido",
+      "invalidPassword": "Contraseña inválida",
+      "emailInUse": "Este correo ya está registrado",
+      "weakPassword": "La contraseña es demasiado débil"
+    },
+    "monitor": {
+      "microphoneAccess": "No se pudo acceder al micrófono",
+      "connectionLost": "Se perdió la conexión",
+      "analysisError": "Error en el análisis"
+    },
+    "general": {
+      "networkError": "Error de conexión",
+      "serverError": "Error del servidor",
+      "unknownError": "Error desconocido"
+    }
+  },
+  "accessibility": {
+    "screenReader": {
+      "navigation": "Navegación principal",
+      "mainContent": "Contenido principal",
+      "button": "Botón",
+      "link": "Enlace",
+      "image": "Imagen",
+      "chart": "Gráfico",
+      "loading": "Cargando contenido"
+    },
+    "aria": {
+      "menuButton": "Abrir menú principal",
+      "closeButton": "Cerrar ventana actual",
+      "nextButton": "Ir a la siguiente página",
+      "previousButton": "Ir a la página anterior",
+      "notification": "Notificación importante"
+    }
+  },
+  "regional": {
+    "es_ES": {
+      "dateFormat": "DD/MM/YYYY",
+      "timeFormat": "HH:mm",
+      "weightUnit": "kg",
+      "heightUnit": "cm",
+      "temperature": "ºC"
+    },
+    "es_MX": {
+      "dateFormat": "DD/MM/YYYY",
+      "timeFormat": "hh:mm a",
+      "weightUnit": "kg",
+      "heightUnit": "cm",
+      "temperature": "ºC"
+    },
+    "es_US": {
+      "dateFormat": "MM/DD/YYYY",
+      "timeFormat": "hh:mm a",
+      "weightUnit": "lb",
+      "heightUnit": "in",
+      "temperature": "ºF"
+    }
+  }
+}
