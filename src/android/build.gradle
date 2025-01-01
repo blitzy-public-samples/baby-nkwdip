@@ -1,0 +1,78 @@
+buildscript {
+    ext {
+        kotlinVersion = '1.8.0'
+        minSdkVersion = 29
+        targetSdkVersion = 33
+        compileSdkVersion = 33
+        androidXVersion = '1.9.0'
+        tensorflowLiteVersion = '2.12.0'
+        reactNativeVersion = '0.71.0'
+        hiltVersion = '2.44'
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "com.facebook.react:react-native-gradle-plugin:0.71.0"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltVersion"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "$rootDir/../node_modules/react-native/android" }
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.google.com" }
+    }
+}
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            android {
+                compileSdkVersion rootProject.ext.compileSdkVersion
+                defaultConfig {
+                    minSdkVersion rootProject.ext.minSdkVersion
+                    targetSdkVersion rootProject.ext.targetSdkVersion
+                    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+                }
+
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_1_8
+                    targetCompatibility JavaVersion.VERSION_1_8
+                }
+
+                kotlinOptions {
+                    jvmTarget = "1.8"
+                }
+
+                buildFeatures {
+                    viewBinding true
+                }
+
+                packagingOptions {
+                    pickFirst "lib/armeabi-v7a/libc++_shared.so"
+                    pickFirst "lib/arm64-v8a/libc++_shared.so"
+                    pickFirst "lib/x86/libc++_shared.so"
+                    pickFirst "lib/x86_64/libc++_shared.so"
+                }
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+wrapper {
+    gradleVersion = '7.6'
+    distributionType = 'ALL'
+}
