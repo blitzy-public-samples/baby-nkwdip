@@ -1,0 +1,101 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.facebook.react'
+}
+
+android {
+    namespace 'com.babycryanalyzer'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId 'com.babycryanalyzer'
+        minSdk 29
+        targetSdk 33
+        versionCode 1
+        versionName '1.0.0'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+        }
+        release {
+            debuggable false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/x86/libc++_shared.so'
+        pickFirst 'lib/x86_64/libc++_shared.so'
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-common:1.8.0'
+    }
+}
+
+dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0'
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'org.tensorflow:tensorflow-lite:2.9.0'
+    implementation 'org.tensorflow:tensorflow-lite-support:0.4.3'
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+    implementation 'com.facebook.react:react-native:0.71.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+    implementation 'com.google.dagger:hilt-android:2.44'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+    implementation 'javax.inject:javax.inject:1'
+
+    debugImplementation 'com.facebook.flipper:flipper:0.182.0'
+    debugImplementation 'com.facebook.flipper:flipper-network-plugin:0.182.0'
+    debugImplementation 'com.facebook.soloader:soloader:0.10.5'
+
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:4.0.0'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0'
+    testImplementation 'org.assertj:assertj-core:3.23.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'com.google.dagger:hilt-android-testing:2.44'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test:runner:1.5.0'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44'
+}
+
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesAppBuildGradle(project)
