@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand colors -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        
+        <!-- System bars customization -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+        
+        <!-- Background colors -->
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        
+        <!-- Default text appearances -->
+        <item name="textAppearanceHeadline1">@style/TextAppearance.App.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.App.Headline2</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.App.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.App.Body2</item>
+    </style>
+
+    <!-- Launcher theme -->
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+    </style>
+
+    <!-- Typography Styles - WCAG 2.1 AA compliant -->
+    <style name="TextAppearance.App.Headline1" parent="TextAppearance.MaterialComponents.Headline1">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:lineHeight">32sp</item>
+        <item name="android:letterSpacing">0.5</item>
+        <item name="android:textAlignment">viewStart</item>
+    </style>
+
+    <style name="TextAppearance.App.Headline2" parent="TextAppearance.MaterialComponents.Headline2">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:lineHeight">28sp</item>
+        <item name="android:letterSpacing">0.25</item>
+        <item name="android:textAlignment">viewStart</item>
+    </style>
+
+    <style name="TextAppearance.App.Body1" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:lineHeight">24sp</item>
+        <item name="android:letterSpacing">0.15</item>
+    </style>
+
+    <style name="TextAppearance.App.Body2" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/textColorSecondary</item>
+        <item name="android:lineHeight">20sp</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+
+    <!-- Button Styles -->
+    <style name="Widget.App.Button.Primary" parent="Widget.MaterialComponents.Button">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Body1</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="Widget.App.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Body1</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <!-- Monitoring Interface Components -->
+    <style name="Widget.App.WaveformView">
+        <item name="android:minHeight">120dp</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:background">@color/waveformBackgroundColor</item>
+        <item name="waveformColor">@color/waveformColor</item>
+    </style>
+
+    <style name="Widget.App.MonitoringCard" parent="Widget.MaterialComponents.CardView">
+        <item name="android:elevation">4dp</item>
+        <item name="android:padding">16dp</item>
+        <item name="cardBackgroundColor">@color/colorSurface</item>
+        <item name="cardCornerRadius">8dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="contentPadding">16dp</item>
+    </style>
+
+    <style name="Widget.App.ConfidenceIndicator">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:background">@drawable/confidence_indicator_background</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.Body2</item>
+    </style>
+
+    <!-- Accessibility Focus Styles -->
+    <style name="FocusHighlight">
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:focusedByDefault">false</item>
+        <item name="android:defaultFocusHighlightEnabled">true</item>
+    </style>
+</resources>
