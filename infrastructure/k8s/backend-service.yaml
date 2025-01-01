@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: baby-cry-analyzer
+  labels:
+    app: baby-cry-analyzer
+    component: backend
+    environment: ${ENV}
+    version: v1
+    managed-by: terraform
+  annotations:
+    # Prometheus monitoring configuration
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "3000"
+    prometheus.io/path: "/metrics"
+    
+    # AWS Load Balancer configurations
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-internal: "false"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-timeout: "300"
+    
+    # Health check configurations
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-interval: "30"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-timeout: "10"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-healthy-threshold: "2"
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-unhealthy-threshold: "3"
+    
+    # SSL Policy for enhanced security
+    service.beta.kubernetes.io/aws-load-balancer-ssl-policy: "ELBSecurityPolicy-TLS-1-2-2017-01"
+    
+    # Additional performance optimizations
+    service.beta.kubernetes.io/aws-load-balancer-connection-idle-timeout: "3600"
+
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+      protocol: TCP
+    - name: websocket
+      port: 3001
+      targetPort: 3001
+      protocol: TCP
+  selector:
+    app: baby-cry-analyzer
+    component: backend
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
