@@ -1,0 +1,49 @@
+# Kubernetes Service manifest for MongoDB StatefulSet
+# Version: v1.24+
+# Purpose: Provides stable network identity and load balancing for MongoDB pods
+
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: mongodb-service
+  namespace: baby-cry-analyzer
+  labels:
+    app: mongodb
+    component: database
+    environment: ${ENV}
+  annotations:
+    # AWS Load Balancer configurations
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    # Connection draining settings
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-timeout: "300"
+    # Prometheus monitoring integration
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "27017"
+
+spec:
+  # Using ClusterIP for internal service access only
+  type: ClusterIP
+  
+  # Port configuration for MongoDB
+  ports:
+    - port: 27017
+      targetPort: 27017
+      protocol: TCP
+      name: mongodb
+  
+  # Selector matching MongoDB StatefulSet pod labels
+  selector:
+    app: mongodb
+    component: database
+  
+  # Session affinity configuration for stable connections
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  
+  # Don't publish pods that aren't ready
+  publishNotReadyAddresses: false
