@@ -1,0 +1,11 @@
+- Dimensions: 72x72 pixels (hdpi density)
+- Format: 32-bit PNG with alpha channel
+- Color space: sRGB
+- Compression: Lossless PNG compression
+- Content: Adaptive icon with:
+  - Circular mask
+  - Composed of background layer (ic_launcher_background)
+  - Composed of foreground layer (ic_launcher_foreground)
+  - 1/8th width padding
+  - Antialiased edges
+- Optimization: Memory and cache-efficient encoding]
