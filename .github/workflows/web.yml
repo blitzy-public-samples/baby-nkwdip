@@ -1,0 +1,217 @@
+name: Web/Mobile CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+    paths: ['src/web/**']
+  pull_request:
+    branches: [main]
+    paths: ['src/web/**']
+
+env:
+  NODE_ENV: ${{ github.event_name == 'push' && 'production' || 'development' }}
+  EXPO_CLI_VERSION: '6.3.2'
+  APP_VERSION: ${{ fromJson(steps.package.outputs.content).version }}
+
+jobs:
+  test:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.npm
+            node_modules/
+            .expo/web/cache
+            .jest/cache
+          key: npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: src/web
+
+      - name: Type checking
+        run: npm run type-check
+        working-directory: src/web
+
+      - name: Lint check
+        run: npm run lint
+        working-directory: src/web
+
+      - name: Run unit tests
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: cd src/web && npm test -- --coverage --ci
+
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: src/web/coverage
+          retention-days: 14
+
+  security_scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@v1
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-report
+          path: snyk-report.json
+          retention-days: 30
+
+  build:
+    name: Build Application
+    needs: [test, security_scan]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      matrix:
+        platform: [android, ios]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: ${{ env.EXPO_CLI_VERSION }}
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: src/web
+
+      - name: Build app bundle
+        run: |
+          if [ "${{ matrix.platform }}" == "android" ]; then
+            npm run build:android
+          else
+            npm run build:ios
+          fi
+        working-directory: src/web
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-bundle-${{ matrix.platform }}
+          path: |
+            src/web/android/app/build/outputs/bundle/release/*.aab
+            src/web/ios/build/Release-iphoneos/*.ipa
+          retention-days: 5
+
+  deploy:
+    name: Deploy
+    needs: [build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      matrix:
+        environment: [development, staging, production]
+    environment:
+      name: ${{ matrix.environment }}
+      url: ${{ matrix.environment == 'production' && 'https://babycryanalyzer.com' || format('https://{0}.babycryanalyzer.com', matrix.environment) }}
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: app-bundle-android
+
+      - name: Configure deployment credentials
+        run: |
+          echo "${{ secrets.GOOGLE_PLAY_API_KEY }}" > play-store-key.json
+          echo "${{ secrets.APPLE_API_KEY }}" > app-store-key.p8
+
+      - name: Deploy to app stores
+        run: |
+          if [ "${{ matrix.environment }}" == "production" ]; then
+            # Production deployment requires manual approval
+            if [ "${{ github.event_name }}" == "push" ]; then
+              # Deploy to production app stores
+              echo "Deploying to production app stores..."
+            fi
+          else
+            # Deploy to test tracks
+            echo "Deploying to ${{ matrix.environment }} test track..."
+          fi
+
+      - name: Health check
+        run: |
+          attempts=0
+          max_attempts=${{ matrix.environment == 'production' && 5 || 3 }}
+          timeout=${{ matrix.environment == 'production' && 600 || 300 }}
+          
+          until curl -s -o /dev/null -w "%{http_code}" ${{ env.DEPLOY_URL }}/health | grep -q "200" || [ $attempts -eq $max_attempts ]
+          do
+            attempts=$((attempts+1))
+            echo "Health check attempt $attempts of $max_attempts"
+            sleep 60
+          done
+          
+          if [ $attempts -eq $max_attempts ]; then
+            echo "Health check failed after $max_attempts attempts"
+            exit 1
+          fi
+
+      - name: Notify deployment status
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          channel: '#mobile-deployments'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+permissions:
+  contents: read
+  packages: read
+  deployments: write
+  security-events: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
