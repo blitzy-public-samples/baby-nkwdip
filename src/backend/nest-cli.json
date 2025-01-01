@@ -1,0 +1,63 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": false,
+    "tsConfigPath": "tsconfig.json",
+    "assets": [
+      "**/*.proto",
+      "**/*.json",
+      "**/*.yaml",
+      "**/*.env",
+      "**/*.ml",
+      "**/*.model"
+    ],
+    "watchAssets": true
+  },
+  "projects": {
+    "analysis": {
+      "type": "application",
+      "root": "src/modules/analysis",
+      "entryFile": "main",
+      "sourceRoot": "src/modules/analysis/src",
+      "compilerOptions": {
+        "tsConfigPath": "src/modules/analysis/tsconfig.json",
+        "assets": [
+          "**/*.proto",
+          "**/*.json"
+        ],
+        "watchAssets": true
+      }
+    },
+    "ml": {
+      "type": "application",
+      "root": "src/modules/ml",
+      "entryFile": "main",
+      "sourceRoot": "src/modules/ml/src",
+      "compilerOptions": {
+        "tsConfigPath": "src/modules/ml/tsconfig.json",
+        "assets": [
+          "**/*.model",
+          "**/*.ml",
+          "**/*.json"
+        ],
+        "watchAssets": true
+      }
+    },
+    "notification": {
+      "type": "application",
+      "root": "src/modules/notification",
+      "entryFile": "main",
+      "sourceRoot": "src/modules/notification/src",
+      "compilerOptions": {
+        "tsConfigPath": "src/modules/notification/tsconfig.json",
+        "assets": [
+          "**/*.json",
+          "**/*.yaml"
+        ],
+        "watchAssets": true
+      }
+    }
+  }
+}
