@@ -1,0 +1,39 @@
+[Binary PNG Image Content]
+Technical Requirements for Image Generation:
+
+Format: PNG
+Dimensions: 375px × 812px
+Resolution: 2x (Retina-ready)
+Color Space: RGB
+Transparency: Enabled
+File Size Target: < 100KB
+Compression: Lossless (pngquant, 90-95% quality)
+
+The image should follow Material Design 3.0 guidelines and visualize:
+- Expert-parent interaction interfaces
+- Community forum elements
+- Professional guidance features
+- Support network visualization
+- Chat/messaging interfaces
+- Expert avatars and profiles
+- Community engagement indicators
+
+Accessibility Requirements:
+- Minimum contrast ratio: 4.5:1
+- Target contrast ratio: 7:1
+- Colorblind-friendly palette
+- RTL/LTR support
+- Cultural-neutral imagery
+
+Responsive Behavior:
+- Mobile Portrait: 100% width (max 375px)
+- Mobile Landscape: Contained (max 50vh)
+- Tablet Portrait: Contained (max 40%)
+- Tablet Landscape: Contained (max 30%)
+
+Performance Optimization:
+- CDN distribution enabled
+- WebP fallback support
+- Eager loading
+- Static caching (1 year)
+- Target load time: < 200ms
