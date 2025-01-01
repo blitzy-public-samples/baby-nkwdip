@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App Groups for secure data sharing -->
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>group.com.babycryanalyzer</string>
+    </array>
+
+    <!-- Complete data protection for all stored files -->
+    <key>com.apple.developer.default-data-protection</key>
+    <string>NSFileProtectionComplete</string>
+
+    <!-- Push notifications environment -->
+    <key>aps-environment</key>
+    <string>development</string>
+
+    <!-- Time-sensitive notifications for urgent alerts -->
+    <key>com.apple.developer.usernotifications.time-sensitive</key>
+    <true/>
+
+    <!-- HealthKit integration -->
+    <key>com.apple.developer.healthkit</key>
+    <true/>
+
+    <!-- iCloud container identifiers -->
+    <key>com.apple.developer.icloud-container-identifiers</key>
+    <array>
+        <string>iCloud.com.babycryanalyzer</string>
+    </array>
+
+    <!-- iCloud services -->
+    <key>com.apple.developer.icloud-services</key>
+    <array>
+        <string>CloudKit</string>
+        <string>CloudDocuments</string>
+    </array>
+
+    <!-- Network client capability -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+
+    <!-- Universal links -->
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:babycryanalyzer.com</string>
+    </array>
+
+    <!-- Siri integration -->
+    <key>com.apple.developer.siri</key>
+    <true/>
+
+    <!-- User-selected file access -->
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+
+    <!-- Critical alerts -->
+    <key>com.apple.developer.usernotifications.critical-alerts</key>
+    <true/>
+</dict>
+</plist>
