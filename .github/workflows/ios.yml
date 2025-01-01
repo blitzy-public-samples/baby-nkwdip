@@ -1,0 +1,195 @@
+# iOS CI/CD Pipeline Configuration v1.0.0
+# Enhanced security workflow for Baby Cry Analyzer iOS application
+# Supports: iOS 14+ platform with automated build, test, and deployment pipeline
+
+name: iOS CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/ios/**'
+      - '.github/workflows/ios.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'src/ios/**'
+      - '.github/workflows/ios.yml'
+  workflow_dispatch:
+
+env:
+  DEVELOPER_APP_ID: ${{ secrets.APPLE_DEVELOPER_APP_ID }}
+  DEVELOPER_APP_IDENTIFIER: ${{ secrets.APPLE_DEVELOPER_APP_IDENTIFIER }}
+  PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+  TEMP_KEYCHAIN_PASSWORD: ${{ secrets.TEMP_KEYCHAIN_PASSWORD }}
+  APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+  FASTLANE_APPLE_ID: ${{ secrets.APPLE_ID }}
+  FASTLANE_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+  WORKSPACE: "BabyCryAnalyzer.xcworkspace"
+  SCHEME: "BabyCryAnalyzer"
+  BUNDLE_IDENTIFIER: "com.babycryanalyzer"
+
+jobs:
+  test:
+    name: Test iOS App
+    runs-on: macos-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Setup Ruby Environment
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+          bundler-cache: true
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'yarn'
+
+      - name: Cache Dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/Library/Caches/CocoaPods
+            Pods
+            ~/.cache/pip
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Setup Secure Environment
+        run: |
+          security create-keychain -p "$TEMP_KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$TEMP_KEYCHAIN_PASSWORD" build.keychain
+          security set-keychain-settings -t 3600 -l ~/Library/Keychains/build.keychain
+
+      - name: Install Dependencies
+        run: |
+          gem install bundler:2.4.10
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+          bundle exec pod install
+        working-directory: src/ios
+
+      - name: Run Security Scan
+        run: |
+          bundle exec fastlane security_scan
+        working-directory: src/ios
+
+      - name: Run Tests
+        run: |
+          bundle exec fastlane test
+        working-directory: src/ios
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        if: success() || failure()
+        with:
+          name: test-results
+          path: src/ios/fastlane/test_output
+          retention-days: 14
+
+  deploy_beta:
+    name: Deploy Beta Build
+    needs: test
+    if: github.ref == 'refs/heads/develop'
+    runs-on: macos-latest
+    timeout-minutes: 45
+    environment: staging
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Ruby Environment
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+          bundler-cache: true
+
+      - name: Setup Provisioning Profiles
+        uses: apple-actions/download-provisioning-profiles@v1
+        with:
+          bundle-id: ${{ env.BUNDLE_IDENTIFIER }}
+          profile-type: 'IOS_APP_STORE'
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+
+      - name: Setup Secure Keychain
+        run: |
+          security create-keychain -p "$TEMP_KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$TEMP_KEYCHAIN_PASSWORD" build.keychain
+          security set-keychain-settings -t 3600 -l ~/Library/Keychains/build.keychain
+
+      - name: Deploy to TestFlight
+        run: |
+          bundle exec fastlane beta
+        working-directory: src/ios
+        env:
+          BETA_REVIEW_EMAIL: ${{ secrets.BETA_REVIEW_EMAIL }}
+          BETA_REVIEW_FIRST_NAME: ${{ secrets.BETA_REVIEW_FIRST_NAME }}
+          BETA_REVIEW_LAST_NAME: ${{ secrets.BETA_REVIEW_LAST_NAME }}
+          BETA_REVIEW_PHONE: ${{ secrets.BETA_REVIEW_PHONE }}
+
+  deploy_production:
+    name: Deploy Production Build
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-latest
+    timeout-minutes: 45
+    environment: production
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Ruby Environment
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
+          bundler-cache: true
+
+      - name: Setup Provisioning Profiles
+        uses: apple-actions/download-provisioning-profiles@v1
+        with:
+          bundle-id: ${{ env.BUNDLE_IDENTIFIER }}
+          profile-type: 'IOS_APP_STORE'
+          issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_PRIVATE_KEY }}
+
+      - name: Setup Secure Keychain
+        run: |
+          security create-keychain -p "$TEMP_KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$TEMP_KEYCHAIN_PASSWORD" build.keychain
+          security set-keychain-settings -t 3600 -l ~/Library/Keychains/build.keychain
+
+      - name: Deploy to App Store
+        run: |
+          bundle exec fastlane release
+        working-directory: src/ios
+        env:
+          SLACK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Cleanup Certificates
+        if: always()
+        run: |
+          security delete-keychain build.keychain
