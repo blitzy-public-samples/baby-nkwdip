@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Information -->
+    <string name="app_name">Baby Cry Analyzer</string>
+    <string name="app_description">AI-powered baby cry analysis and monitoring</string>
+
+    <!-- Monitoring Status -->
+    <string name="monitor_start">Start Monitoring</string>
+    <string name="monitor_stop">Stop Monitoring</string>
+    <string name="monitor_status">Current Status: %1$s</string>
+    <string name="monitoring_duration">Monitoring for %1$d minutes</string>
+
+    <!-- Analysis States -->
+    <string name="cry_detected">Cry Detected</string>
+    <string name="analysis_in_progress">Analyzing cry pattern…</string>
+    <string name="analysis_complete">Analysis Complete</string>
+    <string name="analysis_confidence">Confidence: %1$d%%</string>
+    <string name="cry_pattern_detected">Detected %1$s pattern with %2$d%% confidence</string>
+
+    <!-- Notification Channels -->
+    <string name="notification_channel_name">Cry Analysis</string>
+    <string name="notification_channel_description">Notifications for cry detection and analysis</string>
+    <string name="notification_channel_background">Background Monitoring</string>
+
+    <!-- Permission Messages -->
+    <string name="permission_audio_rationale">Microphone access is required to detect and analyze baby cries</string>
+    <string name="permission_notification_rationale">Notifications are needed to alert you when a cry is detected</string>
+    <string name="permission_background_rationale">Background permission enables continuous cry monitoring when the app is minimized</string>
+
+    <!-- Error Messages -->
+    <string name="error_audio_permission_denied">Cannot monitor cries without microphone access</string>
+    <string name="error_notification_permission_denied">Important alerts will be missed without notification permission</string>
+    <string name="error_background_restricted">Background monitoring is restricted. Please check app settings</string>
+    <string name="error_service_start_failed">Failed to start monitoring service</string>
+
+    <!-- Quick Actions -->
+    <string name="quick_action_feed">Feed</string>
+    <string name="quick_action_change">Change</string>
+    <string name="quick_action_sleep">Sleep</string>
+    <string name="quick_action_log">Log</string>
+
+    <!-- Quick Action Descriptions -->
+    <string name="quick_action_feed_description">Record feeding time and duration</string>
+    <string name="quick_action_change_description">Log diaper change</string>
+    <string name="quick_action_sleep_description">Start sleep tracking</string>
+    <string name="quick_action_log_description">Add custom note</string>
+
+    <!-- Background Service -->
+    <string name="background_service_notification_title">Baby Cry Analyzer Active</string>
+    <string name="background_service_notification_text">Monitoring for cry patterns</string>
+    <string name="background_service_notification_action_stop">Stop Monitoring</string>
+    <string name="background_service_status">Monitoring active: %1$s</string>
+
+    <!-- Accessibility Descriptions -->
+    <string name="accessibility_start_monitoring">Start cry monitoring</string>
+    <string name="accessibility_stop_monitoring">Stop cry monitoring</string>
+    <string name="accessibility_monitoring_status">Current monitoring status</string>
+    <string name="accessibility_confidence_meter">Analysis confidence level</string>
+    <string name="accessibility_quick_actions">Available quick actions</string>
+
+    <!-- Pattern Types -->
+    <string name="pattern_type_hunger">Hunger</string>
+    <string name="pattern_type_tired">Tiredness</string>
+    <string name="pattern_type_pain">Pain</string>
+    <string name="pattern_type_discomfort">Discomfort</string>
+    <string name="pattern_type_unknown">Unknown Pattern</string>
+
+    <!-- Analysis Results -->
+    <string name="result_high_confidence">High confidence detection</string>
+    <string name="result_medium_confidence">Medium confidence detection</string>
+    <string name="result_low_confidence">Low confidence detection</string>
+    <string name="result_insufficient_data">Insufficient data for analysis</string>
+
+    <!-- Settings Labels -->
+    <string name="settings_sensitivity">Monitoring Sensitivity</string>
+    <string name="settings_background">Background Monitoring</string>
+    <string name="settings_notifications">Notification Settings</string>
+    <string name="settings_audio">Audio Settings</string>
+    <string name="settings_data">Data Management</string>
+
+    <!-- Dialog Messages -->
+    <string name="dialog_confirm_stop">Stop monitoring?</string>
+    <string name="dialog_confirm_clear_data">Clear all recorded data?</string>
+    <string name="dialog_button_confirm">Confirm</string>
+    <string name="dialog_button_cancel">Cancel</string>
+    <string name="dialog_button_settings">Open Settings</string>
+</resources>
