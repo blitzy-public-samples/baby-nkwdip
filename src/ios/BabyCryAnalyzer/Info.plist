@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Basic Application Information -->
+    <key>CFBundleName</key>
+    <string>Baby Cry Analyzer</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.babycryanalyzer</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>LSRequiresIPhoneOS</key>
+    <true/>
+    <key>MinimumOSVersion</key>
+    <string>14.0</string>
+
+    <!-- Background Processing Capabilities -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>audio</string>
+        <string>fetch</string>
+        <string>processing</string>
+        <string>remote-notification</string>
+    </array>
+
+    <!-- Privacy Permissions -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Baby Cry Analyzer requires microphone access to continuously monitor and analyze your baby's cries, helping identify their needs in real-time. Your audio data is processed securely and privately.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Baby Cry Analyzer optionally uses the camera for enhanced monitoring capabilities. Video data is processed locally and securely to protect your privacy.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Your location helps us analyze environmental factors that might affect your baby's crying patterns. This data improves the accuracy of our cry analysis.</string>
+
+    <!-- UI Configuration -->
+    <key>UILaunchStoryboardName</key>
+    <string>LaunchScreen</string>
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+        <string>microphone</string>
+        <string>accelerometer</string>
+    </array>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+        <string>UIInterfaceOrientationPortraitUpsideDown</string>
+        <string>UIInterfaceOrientationLandscapeLeft</string>
+        <string>UIInterfaceOrientationLandscapeRight</string>
+    </array>
+    <key>UIUserInterfaceStyle</key>
+    <string>Automatic</string>
+
+    <!-- Security and Compliance -->
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
+</dict>
+</plist>
