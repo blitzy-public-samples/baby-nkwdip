@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Debug-specific permissions -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Required hardware features -->
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="true" />
+
+    <application
+        android:debuggable="true"
+        tools:replace="android:debuggable"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="28"
+        android:networkSecurityConfig="@xml/network_security_config_debug"
+        android:allowBackup="true"
+        android:largeHeap="true"
+        tools:ignore="HardcodedDebugMode,DebuggerIssue,NetworkSecurityConfig,BackupIssue">
+        
+        <!-- Debug-specific application configurations -->
+        <meta-data
+            android:name="com.debug.strictMode"
+            android:value="true" />
+        
+        <meta-data
+            android:name="com.debug.enableLogging"
+            android:value="true" />
+            
+        <meta-data
+            android:name="com.debug.enableOverlay"
+            android:value="true" />
+    </application>
+
+</manifest>
