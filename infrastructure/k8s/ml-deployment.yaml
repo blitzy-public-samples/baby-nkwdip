@@ -1,0 +1,198 @@
+# Kubernetes API version v1.24+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-deployment
+  namespace: baby-cry-analyzer
+  labels:
+    app: baby-cry-analyzer
+    component: ml
+    environment: ${ENV}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "5000"
+    prometheus.io/path: "/metrics"
+
+spec:
+  # Initial replica count for high availability
+  replicas: 3
+  
+  # Rolling update strategy for zero-downtime deployments
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+      
+  # Pod selector for deployment management
+  selector:
+    matchLabels:
+      app: baby-cry-analyzer
+      component: ml
+      
+  template:
+    metadata:
+      labels:
+        app: baby-cry-analyzer
+        component: ml
+    spec:
+      # Security context for the pod
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+        
+      # Container specifications
+      containers:
+      - name: ml-service
+        image: babycryanalyzer/ml-service:${VERSION}
+        imagePullPolicy: Always
+        
+        # Container ports
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+          
+        # Resource requirements and limits
+        resources:
+          requests:
+            cpu: "1000m"
+            memory: "2Gi"
+          limits:
+            cpu: "2000m"
+            memory: "4Gi"
+            
+        # Health checks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+          
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 5000
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+          
+        # Environment variables
+        env:
+        - name: NODE_ENV
+          value: ${ENV}
+        - name: PORT
+          value: "5000"
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: ml-secrets
+              key: mongodb-uri
+        - name: REDIS_URI
+          valueFrom:
+            secretKeyRef:
+              name: ml-secrets
+              key: redis-uri
+              
+        # Volume mounts for ML models and configurations
+        volumeMounts:
+        - name: ml-models
+          mountPath: /app/models
+          readOnly: true
+        - name: ml-config
+          mountPath: /app/config
+          readOnly: true
+          
+      # Volumes definition
+      volumes:
+      - name: ml-models
+        persistentVolumeClaim:
+          claimName: ml-models-pvc
+      - name: ml-config
+        configMap:
+          name: ml-config
+          
+      # Pod scheduling and anti-affinity
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: component
+                  operator: In
+                  values:
+                  - ml
+              topologyKey: kubernetes.io/hostname
+              
+      # Node selection
+      nodeSelector:
+        ml-workload: "true"
+        
+      # Tolerations for specialized nodes
+      tolerations:
+      - key: "ml-workload"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+        
+      # Image pull secrets
+      imagePullSecrets:
+      - name: registry-credentials
+
+---
+# Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ml-hpa
+  namespace: baby-cry-analyzer
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ml-deployment
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+---
+# Vertical Pod Autoscaler
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: ml-vpa
+  namespace: baby-cry-analyzer
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ml-deployment
+  updatePolicy:
+    updateMode: "Auto"
+  resourcePolicy:
+    containerPolicies:
+    - containerName: ml-service
+      minAllowed:
+        cpu: "500m"
+        memory: "1Gi"
+      maxAllowed:
+        cpu: "4000m"
+        memory: "8Gi"
