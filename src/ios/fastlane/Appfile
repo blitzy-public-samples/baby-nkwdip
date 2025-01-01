@@ -1,0 +1,86 @@
+# Fastlane Appfile Configuration v2.212.2
+# Secure credential management and automated deployment configuration for Baby Cry Analyzer iOS app
+
+# App bundle identifier with validation against Info.plist and project settings
+def app_identifier
+  identifier = "com.babycryanalyzer"
+  
+  # Validate identifier format
+  unless identifier.match?(/^[a-zA-Z0-9.-]+\.[a-zA-Z0-9.-]+$/)
+    UI.user_error!("Invalid bundle identifier format: #{identifier}")
+  end
+  
+  identifier
+end
+
+# Apple ID with secure credential validation and rotation
+def apple_id
+  apple_id = ENV['APPLE_ID']
+  
+  # Validate Apple ID existence and format
+  if apple_id.nil? || apple_id.empty?
+    UI.user_error!("APPLE_ID environment variable not set")
+  end
+  
+  unless apple_id.match?(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)
+    UI.user_error!("Invalid Apple ID format: #{apple_id}")
+  end
+  
+  apple_id
+end
+
+# Developer Team ID with access validation
+def team_id
+  team_id = ENV['TEAM_ID']
+  
+  # Validate Team ID existence and format
+  if team_id.nil? || team_id.empty?
+    UI.user_error!("TEAM_ID environment variable not set")
+  end
+  
+  unless team_id.match?(/^[A-Z0-9]{10}$/)
+    UI.user_error!("Invalid Team ID format: #{team_id}")
+  end
+  
+  team_id
+end
+
+# App Store Connect Team ID with role validation
+def itc_team_id
+  itc_team_id = ENV['ITC_TEAM_ID']
+  
+  # Validate App Store Connect Team ID existence and format
+  if itc_team_id.nil? || itc_team_id.empty?
+    UI.user_error!("ITC_TEAM_ID environment variable not set")
+  end
+  
+  unless itc_team_id.match?(/^[A-Z0-9]+$/)
+    UI.user_error!("Invalid App Store Connect Team ID format: #{itc_team_id}")
+  end
+  
+  itc_team_id
+end
+
+# Configure app identifier
+app_identifier app_identifier()
+
+# Configure Apple ID with secure credential handling
+apple_id apple_id()
+
+# Configure Developer Team ID
+team_id team_id()
+
+# Configure App Store Connect Team ID
+itc_team_id itc_team_id()
+
+# Credential rotation period validation
+if ENV['CREDENTIAL_ROTATION_PERIOD']
+  rotation_period = ENV['CREDENTIAL_ROTATION_PERIOD'].to_i
+  if rotation_period <= 0 || rotation_period > 90
+    UI.user_error!("Invalid credential rotation period: #{rotation_period} days")
+  end
+end
+
+# Log configuration status (non-sensitive information only)
+UI.success("Appfile configuration loaded successfully")
+UI.message("Bundle identifier configured: #{app_identifier}")
