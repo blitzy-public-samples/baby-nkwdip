@@ -1,0 +1,71 @@
+# Root EditorConfig file for Baby Cry Analyzer project
+# Enforces consistent coding styles across different editors and IDEs
+root = true
+
+# Common settings for all files
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+# TypeScript and JavaScript files
+[*.{ts,tsx,js,jsx}]
+indent_style = space
+indent_size = 2
+max_line_length = 100
+quote_type = single
+curly_bracket_next_line = false
+spaces_around_operators = true
+spaces_around_brackets = true
+indent_brace_style = 1tbs
+
+# Python files
+[*.py]
+indent_style = space
+indent_size = 4
+max_line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+
+# Kotlin files
+[*.{kt,kts}]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+continuation_indent_size = 8
+insert_final_newline = true
+ktlint_disabled_rules = no-wildcard-imports
+
+# Swift files
+[*.swift]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+continuation_indent_size = 8
+insert_final_newline = true
+quote_type = double
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+insert_final_newline = true
+
+# YAML files
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+max_line_length = 80
+sequence_indent = 2
+mapping_indent = 2
+
+# JSON files
+[*.json]
+indent_style = space
+indent_size = 2
+max_line_length = 80
+insert_final_newline = true
+array_bracket_spacing = false
+object_curly_spacing = true
