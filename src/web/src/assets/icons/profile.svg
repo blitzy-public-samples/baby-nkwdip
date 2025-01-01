@@ -1,0 +1,27 @@
+<svg 
+  xmlns="http://www.w3.org/2000/svg" 
+  viewBox="0 0 24 24"
+  width="24"
+  height="24"
+  fill="currentColor"
+  stroke="none"
+  role="img"
+  aria-label="Profile"
+  style="min-width: 44px; min-height: 44px; padding: 8px;"
+>
+  <!-- Head circle -->
+  <path 
+    d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6 8a6 6 0 1 1 12 0A6 6 0 0 1 6 8z"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  
+  <!-- Body shape -->
+  <path 
+    d="M20 19v1a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1c0-3.314 3.582-6 8-6s8 2.686 8 6z"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
