@@ -1,0 +1,113 @@
+# Kubernetes version: v1.24+
+# MongoDB StatefulSet configuration for Baby Cry Analyzer application
+# Provides highly available MongoDB deployment with persistent storage and replication
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: baby-cry-analyzer
+  labels:
+    app: mongodb
+    component: database
+    environment: ${ENV}
+spec:
+  serviceName: mongodb-service
+  replicas: 3  # Ensures 99.99% SLA with 3-node replica set
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+        component: database
+    spec:
+      # Graceful shutdown period for data consistency
+      terminationGracePeriodSeconds: 60
+      
+      # Ensure high availability by spreading pods across nodes
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - mongodb
+            topologyKey: kubernetes.io/hostname
+      
+      # Security context for MongoDB container
+      securityContext:
+        fsGroup: 999
+        runAsUser: 999
+        runAsNonRoot: true
+      
+      containers:
+      - name: mongodb
+        image: mongo:6.0
+        ports:
+        - containerPort: 27017
+          name: mongodb
+        
+        # Resource allocation based on performance requirements
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "2Gi"
+          limits:
+            cpu: "2"
+            memory: "4Gi"
+        
+        # Volume mounts for data persistence and configuration
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+        - name: mongodb-config
+          mountPath: /etc/mongodb
+        
+        # Environment variables for authentication
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: baby-cry-analyzer-secrets
+              key: MONGODB_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: baby-cry-analyzer-secrets
+              key: MONGODB_ROOT_PASSWORD
+        
+        # Health checks for container lifecycle management
+        livenessProbe:
+          tcpSocket:
+            port: 27017
+          initialDelaySeconds: 60
+          periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: 27017
+          initialDelaySeconds: 30
+          periodSeconds: 10
+      
+      # Configuration volume from ConfigMap
+      volumes:
+      - name: mongodb-config
+        configMap:
+          name: baby-cry-analyzer-config
+          items:
+          - key: mongodb.conf
+            path: mongod.conf
+  
+  # Persistent volume claims for data storage
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 50Gi  # Storage allocation per replica
