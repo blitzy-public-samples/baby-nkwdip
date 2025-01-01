@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: baby-cry-analyzer
+  labels:
+    app: baby-cry-analyzer
+    component: backend
+    environment: ${ENV}
+    version: ${IMAGE_TAG}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "3000"
+    prometheus.io/path: "/metrics"
+    security.policy/compliance: "hipaa,gdpr"
+    backup.policy/retention: "30d"
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: baby-cry-analyzer
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: baby-cry-analyzer
+        component: backend
+        environment: ${ENV}
+        version: ${IMAGE_TAG}
+      annotations:
+        checksum/config: ${CONFIG_CHECKSUM}
+        prometheus.io/scrape: "true"
+    spec:
+      # Security Context for Pod
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      
+      # Pod Anti-Affinity for High Availability
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: baby-cry-analyzer
+                  component: backend
+              topologyKey: kubernetes.io/hostname
+      
+      # Topology Spread for Multi-Zone Distribution
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app: baby-cry-analyzer
+            component: backend
+      
+      containers:
+      - name: backend
+        image: ${ECR_REGISTRY}/baby-cry-analyzer-backend:${IMAGE_TAG}
+        imagePullPolicy: Always
+        
+        # Container Ports
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+          name: http
+        - containerPort: 9090
+          protocol: TCP
+          name: metrics
+        
+        # Resource Requests and Limits
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+        
+        # Health Checks
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 30
+        
+        # Environment Configuration
+        envFrom:
+        - configMapRef:
+            name: baby-cry-analyzer-config
+        - secretRef:
+            name: baby-cry-analyzer-secrets
+        
+        # Container Security Context
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        
+        # Volume Mounts
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: cache
+          mountPath: /cache
+      
+      # Volumes
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: cache
+        emptyDir: {}
